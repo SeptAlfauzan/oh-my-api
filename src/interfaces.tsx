@@ -6,3 +6,11 @@ export interface SidebarItem {
   onClick: () => void;
   isSeparator: boolean;
 }
+
+export interface WorkspaceItem {
+  id: string;
+  name: string;
+  lasEdited: string;
+  numberEndpoints: number;
+  isActive: boolean;
+}

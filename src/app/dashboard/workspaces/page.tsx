@@ -19,16 +19,42 @@ import CreateCard from "./widgets/create_card";
 import WorkSpaceCard from "./widgets/workspace_card";
 import DashboardSidebar from "../dashboard_sidebar";
 import Dialog from "@/widgets/dialog";
+import { WorkspaceItem } from "@/interfaces";
 export default function WorkspacePage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const dummy: WorkspaceItem[] = [
+    {
+      id: "asdasdas",
+      name: "Percobaan",
+      lasEdited: "kemarin",
+      numberEndpoints: 1,
+      isActive: true,
+    },
+    {
+      id: "asdasdas",
+      name: "Percobaan",
+      lasEdited: "kemarin",
+      numberEndpoints: 2,
+      isActive: false,
+    },
+  ];
 
   return (
     <Box display={"flex"} background={"gray.50"} minHeight={"100vh"} gap={10}>
       <DashboardSidebar />
       <DashboardContainer>
         <SimpleGrid columns={3} spacing={4}>
-          <WorkSpaceCard />
           <CreateCard onClick={onOpen} />
+          {dummy.map((item, i) => (
+            <WorkSpaceCard
+              key={i}
+              item={item}
+              props={{
+                _hover: { cursor: "pointer", background: "teal.100" },
+              }}
+            />
+          ))}
         </SimpleGrid>
       </DashboardContainer>
 
