@@ -1,21 +1,7 @@
 "use client";
 
 import DashboardContainer from "@/app/widgets/dashboard_container";
-import {
-  AlertDialogBody,
-  AlertDialogCloseButton,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  Box,
-  Button,
-  Input,
-  SimpleGrid,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { MdAdd, MdCreate, MdNewReleases, MdWarning } from "react-icons/md";
-import Dialog from "@/widgets/dialog";
+import { Box, SimpleGrid } from "@chakra-ui/react";
 import DashboardSidebar from "./dashboard_sidebar";
 export default function Dashboard() {
   return (

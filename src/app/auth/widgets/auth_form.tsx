@@ -35,8 +35,6 @@ export default function AuthForm({
   const [signinError, setSigninError] = useState("");
   const [onSignin, setOnSignin] = useState(false);
 
-  const isError = email === "" && password === "";
-
   const signinEmailPassword = async (email: string, password: string) => {
     setOnSignin(true);
     try {
@@ -113,6 +111,8 @@ export default function AuthForm({
             or
           </Text>
           <GoogleLoginButton
+            onSuccess={() => router.push("/dashboard")}
+            onFail={setSigninError}
             setCookies={setCookies}
             props={{
               width: "100%",

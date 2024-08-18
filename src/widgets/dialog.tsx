@@ -1,14 +1,4 @@
-import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogCloseButton,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Button,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { AlertDialog, AlertDialogOverlay } from "@chakra-ui/react";
 import React, { ReactNode, RefObject } from "react";
 
 type Props = {

@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
-  // return NextResponse.redirect(new URL("/auth", request.url));
   return await verifyToken(request);
 }
 
 async function verifyToken(request: NextRequest) {
   try {
-    const token = request.cookies.get("jwt-token")?.value ?? "";
+    const tokenFromHeader =
+      request.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
+    const token = request.cookies.get("jwt-token")?.value ?? tokenFromHeader;
     // Instead of verifying the token here, we'll call an API route
     const response = await fetch(`${request.nextUrl.origin}/api/verify-token`, {
       method: "POST",
@@ -19,8 +19,6 @@ async function verifyToken(request: NextRequest) {
       body: JSON.stringify({ token: token }),
     });
 
-    // console.log("NGENTOT", response);
-    // return NextResponse.redirect(new URL("/auth", request.url));
     if (response.status === 401) {
       // Token is invalid, redirect to login
       return NextResponse.redirect(new URL("/auth", request.url));
