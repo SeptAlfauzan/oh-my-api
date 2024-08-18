@@ -24,13 +24,15 @@ export default function WorkspacePage() {
   const dummy: WorkspaceItem[] = [
     {
       id: "asdasdas",
+      userId: "-",
       name: "Percobaan",
       lasEdited: "kemarin",
       numberEndpoints: 1,
       isActive: true,
     },
     {
-      id: "asdasdas",
+      id: "asds",
+      userId: "-",
       name: "Percobaan",
       lasEdited: "kemarin",
       numberEndpoints: 2,
@@ -48,7 +50,7 @@ export default function WorkspacePage() {
             item={item}
             props={{
               _hover: { cursor: "pointer", background: "teal.100" },
-              onClick: () => router.push(`/workspaces/${item.id}`),
+              onClick: () => router.push(`/dashboard/workspaces/${item.id}`),
             }}
           />
         ))}
