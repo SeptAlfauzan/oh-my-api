@@ -23,13 +23,7 @@ export default function WorkspacePage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box
-      display={"flex"}
-      background={"gray.50"}
-      minHeight={"100vh"}
-      paddingTop={4}
-      gap={10}
-    >
+    <Box display={"flex"} background={"gray.50"} minHeight={"100vh"} gap={10}>
       <DashboardSidebar />
       <DashboardContainer>
         <SimpleGrid columns={3} spacing={4}>

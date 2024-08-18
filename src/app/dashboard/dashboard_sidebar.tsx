@@ -2,14 +2,15 @@
 import { useRouter } from "next/navigation";
 import { SidebarItem } from "../../interfaces.jsx";
 // import Sidebar from "@/app/widgets/sidebar";
+import { useState } from "react";
 import {
   MdAccountCircle,
   MdHome,
   MdLogout,
   MdWorkspaces,
 } from "react-icons/md";
-import { useState } from "react";
 import Sidebar from "../widgets/sidebar";
+import { BoxProps, ChakraProps } from "@chakra-ui/react";
 
 export default function DashboardSidebar() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -58,6 +59,5 @@ export default function DashboardSidebar() {
       isSeparator: false,
     },
   ];
-
   return <Sidebar items={sidebarItems} activeItemIndex={activeIndex} />;
 }
