@@ -1,7 +1,7 @@
 import { WorkspaceItem } from "@/interfaces";
 import {
   Card,
-  ChakraProps,
+  CardProps,
   Stat,
   StatHelpText,
   StatLabel,
@@ -10,7 +10,7 @@ import {
 
 type Props = {
   item: WorkspaceItem;
-  props?: ChakraProps;
+  props?: CardProps;
 };
 export default function WorkSpaceCard({ item, props }: Props) {
   return (

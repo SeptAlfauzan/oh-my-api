@@ -1,26 +1,24 @@
 "use client";
 
-import DashboardContainer from "@/app/widgets/dashboard_container";
+import { WorkspaceItem } from "@/interfaces";
+import Dialog from "@/widgets/dialog";
 import {
   AlertDialogBody,
   AlertDialogCloseButton,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
-  Box,
   Button,
   Input,
   SimpleGrid,
-  Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { MdAdd, MdCreate, MdNewReleases, MdWarning } from "react-icons/md";
+import DashboardTemplate from "../template";
 import CreateCard from "./widgets/create_card";
 import WorkSpaceCard from "./widgets/workspace_card";
-import DashboardSidebar from "../dashboard_sidebar";
-import Dialog from "@/widgets/dialog";
-import { WorkspaceItem } from "@/interfaces";
+import { useRouter } from "next/navigation";
 export default function WorkspacePage() {
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const dummy: WorkspaceItem[] = [
@@ -41,23 +39,20 @@ export default function WorkspacePage() {
   ];
 
   return (
-    <Box display={"flex"} background={"gray.50"} minHeight={"100vh"} gap={10}>
-      <DashboardSidebar />
-      <DashboardContainer>
-        <SimpleGrid columns={3} spacing={4}>
-          <CreateCard onClick={onOpen} />
-          {dummy.map((item, i) => (
-            <WorkSpaceCard
-              key={i}
-              item={item}
-              props={{
-                _hover: { cursor: "pointer", background: "teal.100" },
-              }}
-            />
-          ))}
-        </SimpleGrid>
-      </DashboardContainer>
-
+    <>
+      <SimpleGrid columns={3} spacing={4}>
+        <CreateCard onClick={onOpen} />
+        {dummy.map((item, i) => (
+          <WorkSpaceCard
+            key={i}
+            item={item}
+            props={{
+              _hover: { cursor: "pointer", background: "teal.100" },
+              onClick: () => router.push(`/workspaces/${item.id}`),
+            }}
+          />
+        ))}
+      </SimpleGrid>
       <Dialog isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
         <AlertDialogContent>
           <AlertDialogHeader>Error when signin</AlertDialogHeader>
@@ -75,6 +70,6 @@ export default function WorkspacePage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </Dialog>
-    </Box>
+    </>
   );
 }
