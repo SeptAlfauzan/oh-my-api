@@ -38,4 +38,27 @@ export default class ImageKitHelper {
       throw error;
     }
   }
+
+  public async uploadJsonString(
+    jsonString: string,
+    fileName: string
+  ): Promise<UploadResponse> {
+    // Convert the JSON string to a Buffer
+    const buffer = Buffer.from(jsonString, "utf-8");
+
+    try {
+      const result = this.imagekit.upload({
+        file: buffer,
+        fileName: fileName,
+        // Ensure the file is recognized as JSON
+        useUniqueFileName: true,
+        tags: ["json"],
+      });
+      console.log("JSON upload successful:", result);
+      return result;
+    } catch (error) {
+      console.error("JSON upload failed:", error);
+      throw error;
+    }
+  }
 }

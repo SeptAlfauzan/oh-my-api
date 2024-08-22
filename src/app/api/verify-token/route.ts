@@ -17,8 +17,8 @@ export async function GET() {
 export async function POST(req: Request, res: Response) {
   try {
     const { token } = await req.json();
+    console.log("DECODE TOKEN", token);
     const decodeToken = await verifyIDToken(token);
-    console.log("DECODE TOKEN", decodeToken);
     return NextResponse.json({ data: decodeToken });
   } catch (e) {
     console.log("ERROR NIH", e);

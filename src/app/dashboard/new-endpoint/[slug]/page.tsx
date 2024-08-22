@@ -1,4 +1,5 @@
 "use client";
+import ImageKitHelper from "@/helper/imagekit_helper";
 import { RequestType } from "@/interfaces";
 import FileUpload from "@/widgets/file_upload";
 import {
@@ -14,14 +15,41 @@ import {
 } from "@chakra-ui/react";
 import { Editor } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
+import { useState } from "react";
 
 export default function Page({ params }: { params: { slug: string } }) {
+  const [editorValue, setEditorValue] = useState("");
+
   function handleEditorValidation(markers: editor.IMarker[]) {
     // model markers
     markers.forEach((marker) => console.log("onValidate:", marker.message));
   }
+
+  function handleOnChangeEditor(value: string | undefined) {
+    if (value != undefined) {
+      setEditorValue(value);
+    }
+  }
+
+  async function handleUploadJson() {
+    try {
+      const res = await fetch("/api/endpoints", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ jsonstr: editorValue }),
+      });
+
+      console.log("Upload result:", res);
+    } catch (error) {
+      console.error("Upload failed:", error);
+    }
+  }
+
   return (
     <Box>
+      <Text>{editorValue}</Text>
       <form>
         <SimpleGrid
           columns={{ base: 1, md: 2 }}
@@ -48,11 +76,13 @@ export default function Page({ params }: { params: { slug: string } }) {
               name={"json-file"}
               placeholder={"Pick from file"}
               acceptedFileTypes={"application/json"}
-              children={<Text color={"gray"}>Pick from file</Text>}
-            />
+            >
+              <Text color={"gray"}>Pick from file</Text>
+            </FileUpload>
             <Text color={"gray"}>Edit your json</Text>
             <Box height={{ base: "40vh", md: "60vh" }}>
               <Editor
+                onChange={handleOnChangeEditor}
                 height="100%"
                 defaultLanguage="json"
                 onValidate={handleEditorValidation}
@@ -67,6 +97,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         </SimpleGrid>
       </form>
       <Button
+        onClick={handleUploadJson}
         position={"fixed"}
         left={{ base: 8, md: "initial" }}
         bottom={4}

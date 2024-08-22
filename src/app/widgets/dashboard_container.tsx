@@ -1,3 +1,4 @@
+"use client";
 import { Box, Text } from "@chakra-ui/react";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";

@@ -10,11 +10,11 @@ import {
   MdWorkspaces,
 } from "react-icons/md";
 import Sidebar from "../widgets/sidebar";
-import { BoxProps, ChakraProps } from "@chakra-ui/react";
 
 export default function DashboardSidebar() {
   const [activeIndex, setActiveIndex] = useState(0);
   const router = useRouter();
+
   const sidebarItems: SidebarItem[] = [
     {
       text: "Dashboard",
@@ -52,9 +52,14 @@ export default function DashboardSidebar() {
     {
       text: "Signout",
       icon: <MdLogout size={24} color="gray" />,
-      onClick: () => {
+      onClick: async () => {
         setActiveIndex(4);
-        router.push("/dashboard");
+        const res = await fetch("/api/signout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
       },
       isSeparator: false,
     },
