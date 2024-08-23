@@ -1,3 +1,4 @@
+import { v4 } from "uuid";
 import { NextResponse } from "next/server";
 
 import { DecodedIdToken, getAuth } from "firebase-admin/auth";
@@ -30,10 +31,14 @@ async function verifyIDToken(token: string): Promise<DecodedIdToken> {
   try {
     const firebaseAdminServiceStr = process.env["FIREBASE_ADMIN_SERVICE_JSON"];
     const firebaseAdminServiceJson = JSON.parse(firebaseAdminServiceStr ?? "");
+
     alreadyCreatedAps.length === 0
-      ? admin.initializeApp({
-          credential: admin.credential.cert(firebaseAdminServiceJson),
-        })
+      ? admin.initializeApp(
+          {
+            credential: admin.credential.cert(firebaseAdminServiceJson),
+          },
+          v4()
+        )
       : alreadyCreatedAps[0];
 
     const result = await getAuth().verifyIdToken(token);

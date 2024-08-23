@@ -7,6 +7,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 
 export default class FirebaseHelper {
@@ -61,6 +62,25 @@ export default class FirebaseHelper {
     try {
       const auth = getAuth();
       const result = await signInWithEmailAndPassword(auth, email, password);
+      const user = result.user;
+      const token = await user.getIdToken();
+      return token;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async registerEmailPassword(
+    email: string,
+    password: string
+  ): Promise<String> {
+    try {
+      const auth = getAuth();
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = result.user;
       const token = await user.getIdToken();
       return token;

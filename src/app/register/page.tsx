@@ -1,11 +1,9 @@
 import { Box, Text } from "@chakra-ui/react";
+import RegisterForm from "./widgets/register_form";
 import { cookies } from "next/headers";
-import AuthForm from "./widgets/auth_form";
 import Link from "next/link";
 
-const cookieStore = cookies();
-
-export default function AuthPage() {
+export default function Page() {
   const setCookies = async (key: string, value: string) => {
     "use server"; // mark function as a server action (fixes the error)
     const token = value;
@@ -20,9 +18,9 @@ export default function AuthPage() {
       alignItems={"center"}
       height={"100vh"}
     >
-      <AuthForm setCookies={setCookies} />
-      <Link href={"/register"}>
-        <Text mt={10}>Create new account</Text>
+      <RegisterForm setCookies={setCookies} />
+      <Link href={"/auth"}>
+        <Text mt={10}>Login to account</Text>
       </Link>
     </Box>
   );
