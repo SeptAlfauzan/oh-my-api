@@ -1,13 +1,19 @@
 export default class Fetch {
-  static async postData<T>(url: string, data: any): Promise<T> {
+  static async postData<T>(
+    url: string,
+    data: any,
+    option: any = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  ): Promise<T> {
     try {
       let res;
       if (data != undefined) {
         res = await fetch(url, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: option.headers,
           body: JSON.stringify(data),
         });
       } else {

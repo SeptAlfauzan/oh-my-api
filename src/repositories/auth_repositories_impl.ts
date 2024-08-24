@@ -1,7 +1,7 @@
 import { User } from "firebase/auth";
-import AuthRepositories from "@/domain/auth_repositories";
 import FirebaseHelper from "@/helper/firebase_helper";
 import { prisma } from "@/helper/prisma";
+import AuthRepositories from "@/domain/repositories/auth_repositories";
 
 export default class AuthRepositoriesImpl implements AuthRepositories {
   async oAuthFindOrCreateNewUser(firebaseUser: User): Promise<User> {

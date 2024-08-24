@@ -17,9 +17,13 @@ import DashboardTemplate from "../template";
 import CreateCard from "./widgets/create_card";
 import WorkSpaceCard from "./widgets/workspace_card";
 import { useRouter } from "next/navigation";
+import Fetch from "@/helper/fetch";
+import { useState } from "react";
+import { Workspace } from "@prisma/client";
 export default function WorkspacePage() {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [workspaceName, setWorkspaceName] = useState("");
 
   const dummy: WorkspaceItem[] = [
     {
@@ -39,6 +43,18 @@ export default function WorkspacePage() {
       isActive: false,
     },
   ];
+
+  async function createWorkSpace() {
+    try {
+      const workspace = await Fetch.postData<Workspace>("/api/workspaces", {
+        name: workspaceName,
+      });
+      alert("success create new workspace");
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  }
 
   return (
     <>
@@ -64,11 +80,16 @@ export default function WorkspacePage() {
             flexDir="column"
             alignItems={"center"}
           >
-            <Input placeholder="Input workspace name" />
+            <Input
+              placeholder="Input workspace name"
+              onChange={(el) => setWorkspaceName(el.target.value)}
+            />
           </AlertDialogBody>
           <AlertDialogFooter gap={2}>
             <Button onClick={onClose}>Close</Button>
-            <Button backgroundColor="teal.200">Create Workspace</Button>
+            <Button backgroundColor="teal.200" onClick={createWorkSpace}>
+              Create Workspace
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </Dialog>
