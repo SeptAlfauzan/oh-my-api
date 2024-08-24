@@ -1,13 +1,32 @@
 import { v4 } from "uuid";
 import { NextResponse } from "next/server";
-
 import { DecodedIdToken, getAuth } from "firebase-admin/auth";
-// import FirebaseAdminHelper from "@/helper/firebase_admin_helper";
-// FirebaseAdminHelper.getInstance();
-
 import * as admin from "firebase-admin";
-import { getApps } from "firebase-admin/app";
-const alreadyCreatedAps = getApps();
+import { getApps, initializeApp } from "firebase-admin/app";
+
+// Initialize Firebase app
+const initializeFirebaseApp = () => {
+  const firebaseAdminServiceStr = process.env.FIREBASE_ADMIN_SERVICE_JSON;
+  if (!firebaseAdminServiceStr) {
+    throw new Error(
+      "FIREBASE_ADMIN_SERVICE_JSON is not set in environment variables"
+    );
+  }
+
+  const firebaseAdminServiceJson = JSON.parse(firebaseAdminServiceStr);
+
+  initializeApp(
+    {
+      credential: admin.credential.cert(firebaseAdminServiceJson),
+    },
+    v4()
+  );
+  // if (getApps().length === 0) {
+  // }
+};
+
+// Initialize Firebase app
+initializeFirebaseApp();
 
 export async function GET() {
   return NextResponse.json({
@@ -29,18 +48,6 @@ export async function POST(req: Request, res: Response) {
 
 async function verifyIDToken(token: string): Promise<DecodedIdToken> {
   try {
-    const firebaseAdminServiceStr = process.env["FIREBASE_ADMIN_SERVICE_JSON"];
-    const firebaseAdminServiceJson = JSON.parse(firebaseAdminServiceStr ?? "");
-
-    alreadyCreatedAps.length === 0
-      ? admin.initializeApp(
-          {
-            credential: admin.credential.cert(firebaseAdminServiceJson),
-          },
-          v4()
-        )
-      : alreadyCreatedAps[0];
-
     const result = await getAuth().verifyIdToken(token);
     return result;
   } catch (error) {

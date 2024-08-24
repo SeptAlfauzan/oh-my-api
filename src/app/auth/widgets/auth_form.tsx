@@ -21,6 +21,9 @@ import {
 import { useState } from "react";
 import { MdWarning } from "react-icons/md";
 import { useRouter } from "next/navigation";
+import { JWT_TOKEN_KEY } from "@/constanta";
+import Fetch from "@/helper/fetch";
+import { url } from "inspector";
 
 export default function AuthForm({
   setCookies,
@@ -38,25 +41,17 @@ export default function AuthForm({
   const signinEmailPassword = async (email: string, password: string) => {
     setOnSignin(true);
     try {
-      const res = await fetch("http://localhost:3000/api/auth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email, password: password }),
+      const result = await Fetch.postData<string>("/api/auth", {
+        email: email,
+        password: password,
       });
-      if (!res.ok) {
-        const msg = await res.text();
-        setSigninError(msg);
-        onOpen();
-      } else {
-        const jsonResult = await res.json();
-        setCookies("jwt-token", jsonResult.data);
-        router.push("/dashboard");
-      }
+
+      setCookies(JWT_TOKEN_KEY, result);
+      router.push("/dashboard");
     } catch (error) {
       console.log(error);
       setSigninError(`${error}`);
+      onOpen();
     } finally {
       setOnSignin(false);
     }

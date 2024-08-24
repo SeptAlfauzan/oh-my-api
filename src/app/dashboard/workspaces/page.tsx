@@ -57,7 +57,7 @@ export default function WorkspacePage() {
       </SimpleGrid>
       <Dialog isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
         <AlertDialogContent>
-          <AlertDialogHeader>Error when signin</AlertDialogHeader>
+          <AlertDialogHeader>Create new workspace</AlertDialogHeader>
           <AlertDialogCloseButton />
           <AlertDialogBody
             display="flex"

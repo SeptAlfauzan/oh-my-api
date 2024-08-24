@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { JWT_TOKEN_KEY } from "./constanta";
 
 export async function middleware(request: NextRequest) {
   return await verifyToken(request);
@@ -9,7 +10,8 @@ async function verifyToken(request: NextRequest) {
   try {
     const tokenFromHeader =
       request.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
-    const token = request.cookies.get("jwt-token")?.value ?? tokenFromHeader;
+    const tokenFromCookies = request.cookies.get(JWT_TOKEN_KEY)?.value;
+    const token = tokenFromCookies ?? tokenFromHeader;
     // Instead of verifying the token here, we'll call an API route
     const response = await fetch(`${request.nextUrl.origin}/api/verify-token`, {
       method: "POST",

@@ -1,26 +1,25 @@
 "use client";
 
+import Fetch from "@/helper/fetch";
 import Dialog from "@/widgets/dialog";
-import GoogleLoginButton from "@/widgets/google_login_btn";
 import PasswordInput from "@/widgets/password_input";
 import {
-  Box,
-  Text,
-  Input,
-  FormControl,
-  Stack,
-  Button,
-  Link,
-  useDisclosure,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogCloseButton,
   AlertDialogBody,
+  AlertDialogCloseButton,
+  AlertDialogContent,
   AlertDialogFooter,
+  AlertDialogHeader,
+  Box,
+  Button,
+  FormControl,
+  Input,
+  Stack,
+  Text,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MdWarning } from "react-icons/md";
-import { useRouter } from "next/navigation";
 
 export default function RegisterForm({
   setCookies,
@@ -39,24 +38,13 @@ export default function RegisterForm({
   const signupEmailPassword = async (email: string, password: string) => {
     setOnSignup(true);
     try {
-      const res = await fetch("http://localhost:3000/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-          email: email,
-          password: password,
-        }),
+      await Fetch.postData("/api/signup", {
+        username: username,
+        email: email,
+        password: password,
       });
-      if (!res.ok) {
-        const msg = await res.text();
-        setSigninError(msg);
-        onOpen();
-      } else {
-        router.push("/auth");
-      }
+
+      router.push("/auth");
     } catch (error) {
       console.log(error);
       setSigninError(`${error}`);

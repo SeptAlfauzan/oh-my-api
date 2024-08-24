@@ -2,12 +2,13 @@ import { Box, Text } from "@chakra-ui/react";
 import RegisterForm from "./widgets/register_form";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { JWT_TOKEN_KEY } from "@/constanta";
 
 export default function Page() {
   const setCookies = async (key: string, value: string) => {
     "use server"; // mark function as a server action (fixes the error)
     const token = value;
-    cookies().set("jwt-token", token, { secure: true });
+    cookies().set(JWT_TOKEN_KEY, token, { secure: true });
   };
 
   return (

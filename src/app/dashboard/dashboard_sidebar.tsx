@@ -10,8 +10,12 @@ import {
   MdWorkspaces,
 } from "react-icons/md";
 import Sidebar from "../widgets/sidebar";
+import Fetch from "@/helper/fetch";
 
-export default function DashboardSidebar() {
+type Props = {
+  onSignoutError: (message: string) => void;
+};
+export default function DashboardSidebar({ onSignoutError }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const router = useRouter();
 
@@ -54,12 +58,12 @@ export default function DashboardSidebar() {
       icon: <MdLogout size={24} color="gray" />,
       onClick: async () => {
         setActiveIndex(4);
-        const res = await fetch("/api/signout", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        try {
+          await Fetch.postData<string>("/api/signout", undefined);
+          router.replace("/auth");
+        } catch (error) {
+          onSignoutError(`Error: ${error}`);
+        }
       },
       isSeparator: false,
     },

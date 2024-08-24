@@ -2,6 +2,7 @@ import AuthRepositoriesImpl from "@/repositories/auth_repositories_impl";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { JWT_TOKEN_KEY } from "@/constanta";
+import { User } from "firebase/auth";
 
 export async function GET() {
   return NextResponse.json({
@@ -11,15 +12,15 @@ export async function GET() {
 
 export async function POST(req: Request, res: Response) {
   try {
-    const { email, password } = await req.json();
-    const user = await new AuthRepositoriesImpl().signin(email, password);
-    const token = await user.getIdToken();
+    const { firebaseUser, token } = await req.json();
+    const user = await new AuthRepositoriesImpl().oAuthFindOrCreateNewUser(
+      firebaseUser
+    );
     cookies().set(JWT_TOKEN_KEY, token.toString(), { secure: true });
-
     return NextResponse.json({ status: "success", data: token });
   } catch (e) {
     const result = (e as Error).message;
-
+    console.log(e);
     return NextResponse.json({ error: result }, { status: 500 });
   }
 }

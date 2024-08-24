@@ -1,23 +1,55 @@
-// "use client";
-import { Box } from "@chakra-ui/react";
-import { ReactNode } from "react";
+"use client";
+import Dialog from "@/widgets/dialog";
+import {
+  AlertDialogBody,
+  AlertDialogCloseButton,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  Box,
+  Button,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { ReactNode, useState } from "react";
+import { MdWarning } from "react-icons/md";
 import DashboardContainer from "../widgets/dashboard_container";
 import DashboardSidebar from "./dashboard_sidebar";
-import { cookies } from "next/headers";
 
 type Props = {
   children: ReactNode;
 };
 export default function DashboardTemplate({ children }: Props) {
-  // const setCookies = async (key: string, value: string) => {
-  //   "use server"; // mark function as a server action (fixes the error)
-  //   const token = value;
-  //   cookies().set("jwt-token", token, { secure: true });
-  // };
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [signoutError, setSignoutError] = useState("");
+
   return (
     <Box display={"flex"} background={"gray.50"} minHeight={"100vh"} gap={10}>
-      <DashboardSidebar />
+      <DashboardSidebar
+        onSignoutError={(message) => {
+          setSignoutError(message);
+          onOpen();
+        }}
+      />
       <DashboardContainer>{children}</DashboardContainer>
+
+      <Dialog isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
+        <AlertDialogContent>
+          <AlertDialogHeader>Error when signout</AlertDialogHeader>
+          <AlertDialogCloseButton />
+          <AlertDialogBody
+            display="flex"
+            flexDir="column"
+            alignItems={"center"}
+          >
+            <MdWarning size={48} color="gray" />
+            <Text>{signoutError}</Text>
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button onClick={onClose}>Close</Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </Dialog>
     </Box>
   );
 }

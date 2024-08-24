@@ -12,3 +12,55 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+
+model User{
+  id String @id
+  username String
+  workspaces Workspace[]
+  @@map("users")
+}
+
+model Workspace{
+  id String @id @default(uuid())
+  name String
+  author User @relation(fields: [author_id], references: [id])
+  author_id String
+  api_endpoints ApiEndpoint[]
+  @@map("workspaces")
+}
+
+model ApiEndpoint{
+  id String @id @default(uuid())
+  name String
+  desc String?
+  workspace Workspace @relation(fields: [workspace_id], references: [id])
+  workspace_id String
+  httpMethod      HttpMethod
+  createdAt       DateTime            @default(now())
+  requestBodyRules RequestBodyRule[]
+  @@map("api_endpoints")
+}
+
+model RequestBodyRule {
+  id             String         @id @default(uuid())
+  api_endpoint  ApiEndpoint  @relation(fields: [api_endpoint_id], references: [id])
+  api_endpoint_id  String
+  field_name      String
+  field_type      String
+  is_required     Boolean
+  min_length      Int?
+  max_length      Int?
+  pattern        String?
+  @@map("request_body_rules")
+}
+
+
+enum HttpMethod {
+  GET
+  POST
+  PUT
+  DELETE
+  PATCH
+}
+

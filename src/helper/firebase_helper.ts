@@ -8,6 +8,7 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  User,
 } from "firebase/auth";
 
 export default class FirebaseHelper {
@@ -39,7 +40,7 @@ export default class FirebaseHelper {
     return this.app;
   }
 
-  public async googleOAuth(): Promise<String> {
+  public async googleOAuth(): Promise<User> {
     try {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({
@@ -48,8 +49,7 @@ export default class FirebaseHelper {
       const auth = getAuth();
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      const token = await user.getIdToken();
-      return token;
+      return user;
     } catch (error) {
       throw error;
     }
@@ -58,13 +58,12 @@ export default class FirebaseHelper {
   public async loginEmailPassword(
     email: string,
     password: string
-  ): Promise<String> {
+  ): Promise<User> {
     try {
       const auth = getAuth();
       const result = await signInWithEmailAndPassword(auth, email, password);
       const user = result.user;
-      const token = await user.getIdToken();
-      return token;
+      return user;
     } catch (error) {
       throw error;
     }
@@ -73,7 +72,7 @@ export default class FirebaseHelper {
   public async registerEmailPassword(
     email: string,
     password: string
-  ): Promise<String> {
+  ): Promise<User> {
     try {
       const auth = getAuth();
       const result = await createUserWithEmailAndPassword(
@@ -82,8 +81,7 @@ export default class FirebaseHelper {
         password
       );
       const user = result.user;
-      const token = await user.getIdToken();
-      return token;
+      return user;
     } catch (error) {
       throw error;
     }

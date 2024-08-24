@@ -1,4 +1,5 @@
 "use client";
+import { JWT_TOKEN_KEY } from "@/constanta";
 import FirebaseHelper from "@/helper/firebase_helper";
 import { Button, ButtonProps, Text } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
@@ -19,8 +20,16 @@ export default function GoogleLoginButton({
   const firebaseHelper = FirebaseHelper.getInstance();
   const loginWithGoogle = async () => {
     try {
-      const token = await firebaseHelper.googleOAuth();
-      setCookies("jwt-token", token.toString());
+      const user = await firebaseHelper.googleOAuth();
+      const token = await user.getIdToken();
+      await fetch("/api/oauth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firebaseUser: user, token: token }),
+      });
+      // setCookies(JWT_TOKEN_KEY, token.toString());
       onSuccess();
       console.log("SUKSES");
     } catch (error) {

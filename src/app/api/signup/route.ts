@@ -1,4 +1,4 @@
-import FirebaseHelper from "@/helper/firebase_helper";
+import AuthRepositoriesImpl from "@/repositories/auth_repositories_impl";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -9,9 +9,13 @@ export async function GET() {
 
 export async function POST(req: Request, res: Response) {
   try {
-    const firebaseApp = FirebaseHelper.getInstance();
     const { email, password, username } = await req.json();
-    const token = await firebaseApp.registerEmailPassword(email, password);
+    const user = await new AuthRepositoriesImpl().signup(
+      username,
+      email,
+      password
+    );
+    const token = await user.getIdToken();
     return NextResponse.json({ status: "success", data: token });
   } catch (e) {
     const result = (e as Error).message;
