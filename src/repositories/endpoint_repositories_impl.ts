@@ -2,12 +2,30 @@ import EndpointsRepositories from "@/domain/repositories/endpoints_repositories"
 import ImageKitHelper from "@/helper/imagekit_helper";
 import { prisma } from "@/helper/prisma";
 import { EndpointItem } from "@/interfaces";
-import { ApiEndpoint, RequestBodyRule } from "@prisma/client";
+import { ApiEndpoint, HttpMethod, RequestBodyRule } from "@prisma/client";
 import { v4 } from "uuid";
 
 export default class EndpointsRepositoriesImpl
   implements EndpointsRepositories
 {
+  async getEndpointsJsonResponse(
+    workspaceId: string,
+    requsetType: HttpMethod
+  ): Promise<string> {
+    try {
+      const result = await prisma.apiEndpoint.findFirst({
+        where: {
+          id: workspaceId,
+          httpMethod: requsetType,
+        },
+      });
+      const jsonUrl = result?.jsonResponseUrl;
+      if (jsonUrl == null) throw Error("Invalid json response");
+      return jsonUrl;
+    } catch (error) {
+      throw error;
+    }
+  }
   async getEndpoints(workspaceId: string): Promise<EndpointItem[]> {
     try {
       const result = await prisma.apiEndpoint.findMany({

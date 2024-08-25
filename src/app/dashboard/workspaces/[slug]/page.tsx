@@ -30,7 +30,13 @@ export default function Page({ params }: { params: { slug: string } }) {
         bottom={4}
         right={4}
       >
-        <Button background={"teal.200"}>
+        <Button
+          background={"teal.200"}
+          position={"fixed"}
+          zIndex={2}
+          bottom={4}
+          right={4}
+        >
           <Text>Create New Endpoint</Text>
         </Button>
       </Link>

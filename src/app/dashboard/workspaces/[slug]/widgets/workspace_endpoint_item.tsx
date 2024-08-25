@@ -1,5 +1,6 @@
 import { EndpointItem } from "@/interfaces";
-import { Box, Button, Link, ListItem, Text } from "@chakra-ui/react";
+import { copyToClipboard } from "@/utils/copy_clipboard";
+import { Box, Button, Link, ListItem, Text, useToast } from "@chakra-ui/react";
 import { HttpMethod } from "@prisma/client";
 import { MdCopyAll } from "react-icons/md";
 
@@ -8,6 +9,8 @@ type Props = {
 };
 
 export default function WorkspaceEndpointItem({ item }: Props) {
+  const toast = useToast();
+
   let typeRequest = "";
   let colorType = "gray.200";
   switch (item.requestType) {
@@ -60,7 +63,33 @@ export default function WorkspaceEndpointItem({ item }: Props) {
           </Box>
         </Box>
       </Link>
-      <Button rightIcon={<MdCopyAll />} marginLeft={"auto"}>
+      <Button
+        rightIcon={<MdCopyAll />}
+        marginLeft={"auto"}
+        onClick={async (_) => {
+          try {
+            await copyToClipboard({
+              message: "-",
+              value: `http://localhost:3000/api/end-to-end?id=${item.id}`,
+            });
+            toast({
+              title: "End to end endpoint url is copied!.",
+              description: "Copy success!!",
+              status: "success",
+              duration: 2000,
+              isClosable: true,
+            });
+          } catch (error) {
+            toast({
+              title: "End to end endpoint url failed to copy!.",
+              description: "Copy fail!!",
+              status: "error",
+              duration: 2000,
+              isClosable: true,
+            });
+          }
+        }}
+      >
         <Text display={{ base: "none", md: "block" }}>Copy URL</Text>
       </Button>
     </ListItem>
