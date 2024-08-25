@@ -18,7 +18,7 @@ async function verifyToken(request: NextRequest) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ token: token }),
+      body: JSON.stringify({ token: token.toString() }),
     });
 
     if (response.status === 401) {

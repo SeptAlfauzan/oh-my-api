@@ -1,16 +1,15 @@
 "use client";
+import { SidebarItem } from "@/interfaces";
 import {
   Box,
-  BoxProps,
-  ChakraProps,
+  Heading,
   IconButton,
   List,
   ListItem,
   Text,
 } from "@chakra-ui/react";
-import { FaFireAlt } from "react-icons/fa";
-import { SidebarItem } from "@/interfaces";
 import { useState } from "react";
+import { FaFireAlt } from "react-icons/fa";
 import { MdMenu } from "react-icons/md";
 
 type Props = {
@@ -22,19 +21,13 @@ export default function Sidebar({ items, activeItemIndex }: Props) {
   const [smMenuOn, setSmMenuOn] = useState(false);
   const toggleMenu = () => setSmMenuOn(!smMenuOn);
   return (
-    <Box
-      // onClick={() => setSmMenuOn(true)}
-      // width={{ base: !smMenuOn ? 48 : "100vw", md: 360 }}
-      // position={"relative"}
-      position={{ base: "absolute", md: "relative" }}
-    >
+    <Box position={{ base: "absolute", md: "relative" }}>
       <IconButton
         icon={<MdMenu />}
         onClick={toggleMenu}
         aria-label={""}
         zIndex={3}
         alignItems={"center"}
-        // position={"absolute"}
         display={{ base: "block", md: "none" }}
       />
       <Box
@@ -53,11 +46,18 @@ export default function Sidebar({ items, activeItemIndex }: Props) {
           backgroundColor={{ base: "background", md: "transparent" }}
           height={"100vh"}
         >
-          <Box paddingX={8} paddingTop={4} alignItems={"center"} gap={2}>
+          <Box
+            paddingX={8}
+            display={"flex"}
+            paddingTop={4}
+            alignItems={"center"}
+            gap={2}
+            mb={4}
+          >
             <FaFireAlt size={48} color="orange" />
-            <Text fontWeight={"bold"} fontSize={"xl"}>
-              Oh-My-API Dashboard{smMenuOn ? "a" : "b"}
-            </Text>
+            <Heading fontWeight={"bold"} fontSize={"xl"}>
+              Oh-My-API Dashboard
+            </Heading>
           </Box>
           <List spacing={2}>
             {items.map((e, i) =>

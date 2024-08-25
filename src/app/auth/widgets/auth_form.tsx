@@ -17,6 +17,7 @@ import {
   AlertDialogCloseButton,
   AlertDialogBody,
   AlertDialogFooter,
+  Heading,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { MdWarning } from "react-icons/md";
@@ -76,9 +77,9 @@ export default function AuthForm({
           </AlertDialogFooter>
         </AlertDialogContent>
       </Dialog>
-      <Text fontSize={"2xl"} fontWeight={"bold"} mb={4}>
+      <Heading fontSize={"2xl"} fontWeight={"bold"} mb={4}>
         Please signin to your account
-      </Text>
+      </Heading>
       <form
         onSubmit={(e) => {
           e.preventDefault();

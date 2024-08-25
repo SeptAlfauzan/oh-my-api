@@ -4,9 +4,7 @@ import AuthForm from "./widgets/auth_form";
 import Link from "next/link";
 import { JWT_TOKEN_KEY } from "@/constanta";
 
-const cookieStore = cookies();
-
-export default function AuthPage() {
+export default function Page() {
   const setCookies = async (key: string, value: string) => {
     "use server"; // mark function as a server action (fixes the error)
     const token = value;

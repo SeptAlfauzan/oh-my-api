@@ -12,6 +12,7 @@ import {
   Box,
   Button,
   FormControl,
+  Heading,
   Input,
   Stack,
   Text,
@@ -72,9 +73,12 @@ export default function RegisterForm({
           </AlertDialogFooter>
         </AlertDialogContent>
       </Dialog>
-      <Text fontSize={"2xl"} fontWeight={"bold"} mb={4}>
-        Please signin to your account
-      </Text>
+      <Heading fontSize={"2xl"} fontWeight={"bold"} mb={4}>
+        Fill textfields below
+      </Heading>
+      <Heading fontSize={"1xl"} mb={4}>
+        to register your new account
+      </Heading>
       <form
         onSubmit={(e) => {
           e.preventDefault();

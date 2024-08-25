@@ -21,7 +21,7 @@ export default function GoogleLoginButton({
   const loginWithGoogle = async () => {
     try {
       const user = await firebaseHelper.googleOAuth();
-      const token = await user.getIdToken();
+      const token = await user.getIdToken(true);
       await fetch("/api/oauth", {
         method: "POST",
         headers: {
@@ -29,10 +29,10 @@ export default function GoogleLoginButton({
         },
         body: JSON.stringify({ firebaseUser: user, token: token }),
       });
-      // setCookies(JWT_TOKEN_KEY, token.toString());
       onSuccess();
       console.log("SUKSES");
     } catch (error) {
+      alert(error);
       onFail(`${error}`);
     }
   };
