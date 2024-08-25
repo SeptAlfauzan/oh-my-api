@@ -22,7 +22,7 @@ import Fetch from "@/helper/fetch";
 import { useState } from "react";
 import { Workspace } from "@prisma/client";
 
-import useSWR, { SWRResponse } from "swr";
+import useSWR from "swr";
 
 export default function Page() {
   const { data, error, isLoading } = useSWR<WorkspaceItem[], Error, any>(

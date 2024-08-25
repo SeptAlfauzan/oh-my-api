@@ -16,7 +16,7 @@ export async function POST(req: Request, res: Response) {
       password
     );
     const token = await user.getIdToken();
-    return NextResponse.json({ status: "success", data: token });
+    return NextResponse.json({ data: token });
   } catch (e) {
     const result = (e as Error).message;
     console.log(e);

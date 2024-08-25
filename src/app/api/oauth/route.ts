@@ -17,7 +17,7 @@ export async function POST(req: Request, res: Response) {
       firebaseUser
     );
     cookies().set(JWT_TOKEN_KEY, token.toString(), { secure: true });
-    return NextResponse.json({ status: "success", data: token });
+    return NextResponse.json({ data: token });
   } catch (e) {
     const result = (e as Error).message;
     console.log(e);

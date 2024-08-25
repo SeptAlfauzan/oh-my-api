@@ -24,7 +24,7 @@ export async function POST(req: NextRequest, res: Response) {
       name,
       decodedToken.uid
     );
-    return NextResponse.json({ message: "success", data: result });
+    return NextResponse.json({ data: result });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ error: error }, { status: 500 });

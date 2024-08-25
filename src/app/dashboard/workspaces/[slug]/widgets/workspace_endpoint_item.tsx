@@ -40,14 +40,14 @@ export default function WorkspaceEndpointItem({ item }: Props) {
       padding={2}
       borderRadius={8}
     >
-      <Link href={item.url} width={"100%"}>
+      <Link href={item.jsonResponseUrl} width={"100%"}>
         <Box display={"flex"} width={"100%"} alignItems={"center"} gap={4}>
           <Text width={20} color={colorType} fontWeight={"bold"}>
             {typeRequest}
           </Text>
           <Box>
             <Text noOfLines={1} textOverflow={"ellipsis"}>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit
+              {item.name}
             </Text>
             <Text
               fontSize={12}
@@ -55,7 +55,7 @@ export default function WorkspaceEndpointItem({ item }: Props) {
               noOfLines={1}
               textOverflow={"ellipsis"}
             >
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit
+              {item.desc}
             </Text>
           </Box>
         </Box>

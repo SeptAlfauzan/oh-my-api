@@ -8,12 +8,23 @@ import { v4 } from "uuid";
 export default class EndpointsRepositoriesImpl
   implements EndpointsRepositories
 {
-  async getEndpoints(workspaceId: string): Promise<ApiEndpoint[]> {
+  async getEndpoints(workspaceId: string): Promise<EndpointItem[]> {
     try {
-      return await prisma.apiEndpoint.findMany({
+      const result = await prisma.apiEndpoint.findMany({
         where: {
           workspace_id: workspaceId,
         },
+      });
+      return result.map((item) => {
+        return {
+          id: item.id,
+          workspaceId: item.workspace_id,
+          desc: item.desc,
+          name: item.name,
+          jsonResponseUrl: item.jsonResponseUrl,
+          lastEdited: item.createdAt.toString(),
+          requestType: item.httpMethod,
+        } as EndpointItem;
       });
     } catch (error) {
       throw error;
@@ -40,7 +51,7 @@ export default class EndpointsRepositoriesImpl
         fileName
       );
 
-      endpointItem.url = resultImagekit.url;
+      endpointItem.jsonResponseUrl = resultImagekit.url;
 
       const result = await prisma.apiEndpoint.create({
         data: {

@@ -20,7 +20,7 @@ export type EndpointItem = {
   workspaceId: string;
   desc: string;
   name: string;
-  url: string;
+  jsonResponseUrl: string;
   lastEdited: string;
   requestType: HttpMethod;
 };

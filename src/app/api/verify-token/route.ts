@@ -15,6 +15,6 @@ export async function POST(req: Request, res: Response) {
     return NextResponse.json({ data: decodeToken });
   } catch (e) {
     console.log("ERROR NIH", e);
-    return NextResponse.json({ status: "fail", message: e }, { status: 401 });
+    return NextResponse.json({ message: e }, { status: 401 });
   }
 }

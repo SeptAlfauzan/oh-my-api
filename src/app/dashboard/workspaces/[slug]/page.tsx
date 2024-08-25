@@ -1,55 +1,28 @@
+"use client";
 import { EndpointItem } from "@/interfaces";
 import { Box, Button, List, Link, Text } from "@chakra-ui/react";
-import { MdCopyAll } from "react-icons/md";
 import WorkspaceEndpointItem from "./widgets/workspace_endpoint_item";
-import { HttpMethod } from "@prisma/client";
+import useSWR from "swr";
+import Fetch from "@/helper/fetch";
 
 export default function Page({ params }: { params: { slug: string } }) {
-  const dummy: EndpointItem[] = [
-    {
-      id: "woeiuqwe",
-      workspaceId: "ioqwiue",
-      desc: "singkat saja",
-      name: "Paham!",
-      url: `/dashboard/workspaces/${params.slug}/items/`,
-      lastEdited: "kemarin",
-      requestType: HttpMethod.GET,
-    },
-    {
-      id: "woeiuqwe",
-      workspaceId: "ioqwiue",
-      desc: "singkat saja",
-      name: "Paham!",
-      url: `/dashboard/workspaces/${params.slug}/items/`,
-      lastEdited: "kemarin",
-      requestType: HttpMethod.POST,
-    },
-    {
-      id: "woeiuqwe",
-      workspaceId: "ioqwiue",
-      desc: "singkat saja",
-      name: "Paham!",
-      url: `/dashboard/workspaces/${params.slug}/items/`,
-      lastEdited: "kemarin",
-      requestType: HttpMethod.PUT,
-    },
-    {
-      id: "woeiuqwe",
-      workspaceId: "ioqwiue",
-      desc: "singkat saja",
-      name: "Paham!",
-      url: `/dashboard/workspaces/${params.slug}/items/`,
-      lastEdited: "kemarin",
-      requestType: HttpMethod.DELETE,
-    },
-  ];
+  const { data, error, isLoading } = useSWR<EndpointItem[], Error, any>(
+    `/api/endpoints?workspaceId=${params.slug}`,
+    Fetch.getData
+  );
 
+  if (error) return <Text>Failed to load {error.message}</Text>;
+  if (isLoading) return <Text>Loading...</Text>;
+
+  const items = data ?? [];
   return (
     <Box>
       <List spacing={3}>
-        {dummy.map((item, i) => (
-          <WorkspaceEndpointItem key={i} item={item} />
-        ))}
+        {items.length == 0 ? (
+          <Text>No API endpoint has created yet</Text>
+        ) : (
+          items.map((item, i) => <WorkspaceEndpointItem key={i} item={item} />)
+        )}
       </List>
       <Link
         href={`/dashboard/workspaces/${params.slug}/new`}

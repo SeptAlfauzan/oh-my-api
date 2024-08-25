@@ -10,7 +10,14 @@ export default function DashboardContainer({ children }: Props) {
   const pathname = usePathname();
   return (
     <Box flex={1} padding={{ base: 8, md: 4 }}>
-      <Text pt={2} mb={8} fontSize={"xl"} color={"gray.400"}>
+      <Text
+        width={"100vw"}
+        pt={2}
+        mb={8}
+        fontSize={{ base: 12, md: "xl" }}
+        color={"gray.400"}
+        textOverflow={"ellipsis"}
+      >
         {pathname}
       </Text>
       {children}

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     await signoutDeleteCookies();
-    return NextResponse.json({ status: "success" });
+    return NextResponse.json({ data: "signout success" });
   } catch (e) {
     const result = (e as Error).message;
     return NextResponse.json({ error: result }, { status: 500 });
