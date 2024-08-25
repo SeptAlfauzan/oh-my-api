@@ -24,6 +24,7 @@ model User{
 model Workspace{
   id String @id @default(uuid())
   name String
+  last_edited DateTime @default(now())
   author User @relation(fields: [author_id], references: [id])
   author_id String
   api_endpoints ApiEndpoint[]
@@ -34,11 +35,12 @@ model ApiEndpoint{
   id String @id @default(uuid())
   name String
   desc String?
+  httpMethod      HttpMethod
+  jsonResponseUrl String
   workspace Workspace @relation(fields: [workspace_id], references: [id])
   workspace_id String
-  httpMethod      HttpMethod
-  createdAt       DateTime            @default(now())
   requestBodyRules RequestBodyRule[]
+  createdAt       DateTime            @default(now())
   @@map("api_endpoints")
 }
 
@@ -52,6 +54,7 @@ model RequestBodyRule {
   min_length      Int?
   max_length      Int?
   pattern        String?
+  useAuthorization Boolean @default(false)
   @@map("request_body_rules")
 }
 

@@ -1,3 +1,4 @@
+import { HttpMethod } from "@prisma/client";
 import { ReactNode } from "react";
 
 export interface SidebarItem {
@@ -7,27 +8,19 @@ export interface SidebarItem {
   isSeparator: boolean;
 }
 
-export interface WorkspaceItem {
+export type WorkspaceItem = {
   id: string;
-  userId: string;
   name: string;
   lasEdited: string;
   numberEndpoints: number;
-  isActive: boolean;
-}
+};
 
-export interface EndpointItem {
+export type EndpointItem = {
   id: string;
   workspaceId: string;
   desc: string;
   name: string;
+  url: string;
   lastEdited: string;
-  requestType: RequestType;
-}
-
-export enum RequestType {
-  GET,
-  POST,
-  PUT,
-  DELETE,
-}
+  requestType: HttpMethod;
+};

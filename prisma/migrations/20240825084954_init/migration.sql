@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "workspaces" ADD COLUMN     "last_edited" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

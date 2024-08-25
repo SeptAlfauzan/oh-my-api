@@ -1,20 +1,37 @@
 import WorkspaceRepositories from "@/domain/repositories/workspace_repositories";
 import { prisma } from "@/helper/prisma";
+import { WorkspaceItem } from "@/interfaces";
 import { Workspace } from "@prisma/client";
-import { getAuth } from "firebase/auth";
 
 export default class WorkspaceRepositoriesImpl
   implements WorkspaceRepositories
 {
-  async getAllFromAuthor(authorId: string): Promise<Workspace[]> {
+  delete(workspace: WorkspaceItem, authorId: string): Promise<Workspace> {
+    throw new Error("Method not implemented.");
+  }
+  async getAllFromAuthor(authorId: string): Promise<WorkspaceItem[]> {
     try {
       if (authorId == null) throw new Error("User id is null!");
       const workspaces = await prisma.workspace.findMany({
         where: {
           author_id: authorId,
         },
+        include: {
+          _count: {
+            select: { api_endpoints: true },
+          },
+        },
       });
-      return workspaces;
+
+      const workspaceItems: WorkspaceItem[] = workspaces.map((item) => {
+        return {
+          id: item.id,
+          name: item.name,
+          numberEndpoints: item._count.api_endpoints,
+          lasEdited: item.last_edited.toString(),
+        };
+      });
+      return workspaceItems;
     } catch (error) {
       throw error;
     }
@@ -32,8 +49,5 @@ export default class WorkspaceRepositoriesImpl
     } catch (error) {
       throw error;
     }
-  }
-  delete(workspace: Workspace): Promise<Workspace> {
-    throw new Error("Method not implemented.");
   }
 }

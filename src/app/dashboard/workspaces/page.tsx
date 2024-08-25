@@ -11,6 +11,7 @@ import {
   Button,
   Input,
   SimpleGrid,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import DashboardTemplate from "../template";
@@ -20,29 +21,20 @@ import { useRouter } from "next/navigation";
 import Fetch from "@/helper/fetch";
 import { useState } from "react";
 import { Workspace } from "@prisma/client";
-export default function WorkspacePage() {
+
+import useSWR, { SWRResponse } from "swr";
+
+export default function Page() {
+  const { data, error, isLoading } = useSWR<WorkspaceItem[], Error, any>(
+    "/api/workspaces",
+    Fetch.getData
+  );
+
+  console.log(data);
+
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [workspaceName, setWorkspaceName] = useState("");
-
-  const dummy: WorkspaceItem[] = [
-    {
-      id: "asdasdas",
-      userId: "-",
-      name: "Percobaan",
-      lasEdited: "kemarin",
-      numberEndpoints: 1,
-      isActive: true,
-    },
-    {
-      id: "asds",
-      userId: "-",
-      name: "Percobaan",
-      lasEdited: "kemarin",
-      numberEndpoints: 2,
-      isActive: false,
-    },
-  ];
 
   async function createWorkSpace() {
     try {
@@ -56,11 +48,13 @@ export default function WorkspacePage() {
     }
   }
 
+  if (error) return <Text>failed to load {error.message}</Text>;
+  if (isLoading) return <Text>loading...</Text>;
   return (
     <>
       <SimpleGrid columns={3} spacing={4}>
         <CreateCard onClick={onOpen} />
-        {dummy.map((item, i) => (
+        {(data ?? []).map((item, i) => (
           <WorkSpaceCard
             key={i}
             item={item}

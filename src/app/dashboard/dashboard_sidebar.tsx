@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { SidebarItem } from "../../interfaces.jsx";
-// import Sidebar from "@/app/widgets/sidebar";
 import { useState } from "react";
 import {
   MdAccountCircle,

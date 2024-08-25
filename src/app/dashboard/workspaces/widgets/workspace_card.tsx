@@ -14,7 +14,7 @@ type Props = {
 };
 export default function WorkSpaceCard({ item, props }: Props) {
   return (
-    <Card padding={4} {...props} opacity={item.isActive ? 1 : 0.6}>
+    <Card padding={4} {...props}>
       <Stat>
         <StatLabel mb={2} fontWeight={"bold"}>
           {item.name}
@@ -24,7 +24,7 @@ export default function WorkSpaceCard({ item, props }: Props) {
         <StatHelpText fontSize={12} mt={4} textAlign={"right"}>
           Last edited
         </StatHelpText>
-        <StatHelpText fontSize={12} textAlign={"right"}>
+        <StatHelpText fontSize={10} textAlign={"right"}>
           {item.lasEdited}
         </StatHelpText>
       </Stat>

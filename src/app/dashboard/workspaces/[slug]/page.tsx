@@ -1,7 +1,8 @@
-import { EndpointItem, RequestType } from "@/interfaces";
+import { EndpointItem } from "@/interfaces";
 import { Box, Button, List, Link, Text } from "@chakra-ui/react";
 import { MdCopyAll } from "react-icons/md";
 import WorkspaceEndpointItem from "./widgets/workspace_endpoint_item";
+import { HttpMethod } from "@prisma/client";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const dummy: EndpointItem[] = [
@@ -10,32 +11,36 @@ export default function Page({ params }: { params: { slug: string } }) {
       workspaceId: "ioqwiue",
       desc: "singkat saja",
       name: "Paham!",
+      url: `/dashboard/workspaces/${params.slug}/items/`,
       lastEdited: "kemarin",
-      requestType: RequestType.GET,
+      requestType: HttpMethod.GET,
     },
     {
       id: "woeiuqwe",
       workspaceId: "ioqwiue",
       desc: "singkat saja",
       name: "Paham!",
+      url: `/dashboard/workspaces/${params.slug}/items/`,
       lastEdited: "kemarin",
-      requestType: RequestType.POST,
+      requestType: HttpMethod.POST,
     },
     {
       id: "woeiuqwe",
       workspaceId: "ioqwiue",
       desc: "singkat saja",
       name: "Paham!",
+      url: `/dashboard/workspaces/${params.slug}/items/`,
       lastEdited: "kemarin",
-      requestType: RequestType.PUT,
+      requestType: HttpMethod.PUT,
     },
     {
       id: "woeiuqwe",
       workspaceId: "ioqwiue",
       desc: "singkat saja",
       name: "Paham!",
+      url: `/dashboard/workspaces/${params.slug}/items/`,
       lastEdited: "kemarin",
-      requestType: RequestType.DELETE,
+      requestType: HttpMethod.DELETE,
     },
   ];
 
@@ -47,7 +52,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         ))}
       </List>
       <Link
-        href={`/dashboard/new-endpoint/${params.slug}`}
+        href={`/dashboard/workspaces/${params.slug}/new`}
         position={"absolute"}
         bottom={4}
         right={4}
