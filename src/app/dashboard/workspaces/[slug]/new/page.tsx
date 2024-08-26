@@ -1,6 +1,5 @@
 "use client";
 import Fetch from "@/helper/fetch";
-import ImageKitHelper from "@/helper/imagekit_helper";
 import FileUpload from "@/widgets/file_upload";
 import {
   Box,
@@ -12,11 +11,13 @@ import {
   SimpleGrid,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { Editor } from "@monaco-editor/react";
 import { HttpMethod } from "@prisma/client";
 import { editor } from "monaco-editor";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const [editorValue, setEditorValue] = useState("");
@@ -24,6 +25,10 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [name, setName] = useState<string | undefined>(undefined);
   const [desc, setDesc] = useState<string | undefined>(undefined);
   const [enabledButton, setEnabledButton] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+  const toast = useToast();
 
   function handleEditorValidation(markers: editor.IMarker[]) {
     const errorMessages = markers.map((marker) => marker.message);
@@ -35,21 +40,64 @@ export default function Page({ params }: { params: { slug: string } }) {
     if (value != undefined) {
       setEditorValue(value);
     }
+    updateEnableButton();
   }
 
+  function updateEnableButton() {
+    const value =
+      httpMethod != undefined &&
+      name != undefined &&
+      editorValue != "" &&
+      desc != "";
+    console.log(value);
+    console.log(editorValue);
+    setEnabledButton(value);
+  }
+
+  useEffect(() => {
+    const value =
+      httpMethod != undefined &&
+      name != undefined &&
+      editorValue != "" &&
+      desc != "";
+    console.log(value);
+    console.log(editorValue);
+    setEnabledButton(value);
+  }, [desc, editorValue, httpMethod, name]);
+
   async function handleUploadJson() {
+    setLoading(true);
     try {
-      const res = await Fetch.postData("/api/endpoints", {
+      await Fetch.postData("/api/endpoints", {
         workspaceId: params.slug,
         name: name,
         desc: desc,
         jsonstr: editorValue,
         requestType: httpMethod,
       });
-      alert(`sukses upload ${res}`);
-      console.log("Upload result:", httpMethod);
+      toast({
+        title: `New endpoint api successfully created!.`,
+        description: `Success create new api endpoint!`,
+        status: "info",
+        position: "top-right",
+        duration: 2000,
+        isClosable: true,
+        onCloseComplete() {
+          router.replace(`/dashboard/workspaces/${params.slug}`);
+        },
+      });
     } catch (error) {
-      console.error("Upload failed:", error);
+      const result = (error as Error).message;
+      toast({
+        title: `Error endpoint api failed to created!.`,
+        description: `Error: ${result}`,
+        status: "error",
+        position: "top-right",
+        duration: 2000,
+        isClosable: true,
+      });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -72,7 +120,9 @@ export default function Page({ params }: { params: { slug: string } }) {
             <FormLabel>Name</FormLabel>
             <Input
               placeholder="Your endpoint name"
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
             />
           </FormControl>
           <FormControl width={300}>
@@ -81,7 +131,6 @@ export default function Page({ params }: { params: { slug: string } }) {
               placeholder="Select request type"
               color={"gray"}
               onChange={(e) => {
-                console.log(e.target.value);
                 setHttpMethod(e.target.value);
               }}
             >
@@ -96,15 +145,18 @@ export default function Page({ params }: { params: { slug: string } }) {
             <FormLabel>Desc</FormLabel>
             <Textarea
               placeholder="Your endpoint name"
-              onChange={(e) => setDesc(e.target.value)}
+              onChange={(e) => {
+                setDesc(e.target.value);
+              }}
             />
           </FormControl>
         </SimpleGrid>
-        {enabledButton ? "aaaa" : "bbbb"}
         <Box display={"flex"} flexDir={"column"} gap={2}>
           <Text>Expected json result</Text>
           <FileUpload
-            cbOnReadJsonFile={(fileContent) => setEditorValue(fileContent)}
+            cbOnReadJsonFile={(fileContent) => {
+              setEditorValue(fileContent);
+            }}
             name={"json-file"}
             placeholder={"Pick from file"}
             acceptedFileTypes={"application/json"}
@@ -123,23 +175,15 @@ export default function Page({ params }: { params: { slug: string } }) {
           </Box>
         </Box>
         <Button
-          disabled={
-            !(
-              name != undefined &&
-              desc != undefined &&
-              httpMethod != undefined &&
-              editorValue != "" &&
-              enabledButton == true
-            )
-          }
+          disabled={loading || !enabledButton}
           type="submit"
           position={"fixed"}
           left={{ base: 8, md: "initial" }}
           bottom={4}
           right={8}
-          background={"teal.200"}
+          background={enabledButton ? "teal.200" : "gray.200"}
         >
-          <Text>Save</Text>
+          <Text>{loading ? "Please wait..." : "Save"}</Text>
         </Button>
       </form>
     </Box>

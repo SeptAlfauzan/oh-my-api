@@ -31,7 +31,12 @@ export default function Page({ params }: { params: { slug: string } }) {
         right={4}
       >
         <Button
-          background={"teal.200"}
+          color={"white"}
+          _hover={{
+            textColor: "black",
+            background: "gray.200",
+          }}
+          background={"gray.700"}
           position={"fixed"}
           zIndex={2}
           bottom={4}

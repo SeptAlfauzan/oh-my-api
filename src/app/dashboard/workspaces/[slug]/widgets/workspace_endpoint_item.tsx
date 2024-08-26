@@ -76,6 +76,7 @@ export default function WorkspaceEndpointItem({ item }: Props) {
               title: "End to end endpoint url is copied!.",
               description: "Copy success!!",
               status: "success",
+              position: "top-right",
               duration: 2000,
               isClosable: true,
             });
@@ -84,6 +85,7 @@ export default function WorkspaceEndpointItem({ item }: Props) {
               title: "End to end endpoint url failed to copy!.",
               description: "Copy fail!!",
               status: "error",
+              position: "top-right",
               duration: 2000,
               isClosable: true,
             });
