@@ -9,6 +9,7 @@
     "lint": "next lint",
     "prisma-generate-client:dev": "npx prisma generate --schema prisma/postgresql/schema.prisma",
     "prisma-generate-client:prod": "npx prisma generate --schema prisma/cockroachdb/schema.prisma",
+    "postinstall": "npm run prisma-generate-client:prod && npm run prisma-generate-client:dev",
     "migrate:dev": "npm run prisma-generate:dev && dotenv -e .env.development -- npx prisma migrate dev --schema prisma/postgresql/schema.prisma --name initial",
     "migrate:prod": "npm run prisma-generate:prod && dotenv -e .env.production -- npx prisma migrate dev --schema prisma/cockroachdb/schema.prisma --name initial"
   },
@@ -30,6 +31,7 @@
     "swr": "^2.2.5"
   },
   "devDependencies": {
+    "@prisma/nextjs-monorepo-workaround-plugin": "^5.18.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
