@@ -1,4 +1,4 @@
-import AuthRepositoriesImpl from "@/repositories/auth_repositories_impl";
+import AuthRepositoryImpl from "@/repositories/auth_repositories_impl";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { JWT_TOKEN_KEY } from "@/constanta";
@@ -13,7 +13,7 @@ export async function GET() {
 export async function POST(req: Request, res: Response) {
   try {
     const { firebaseUser, token } = await req.json();
-    const user = await new AuthRepositoriesImpl().oAuthFindOrCreateNewUser(
+    const user = await new AuthRepositoryImpl().oAuthFindOrCreateNewUser(
       firebaseUser
     );
     cookies().set(JWT_TOKEN_KEY, token.toString(), { secure: true });

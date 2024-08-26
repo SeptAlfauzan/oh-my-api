@@ -1,7 +1,7 @@
 import { EndpointItem } from "@/interfaces";
 import { ApiEndpoint, HttpMethod, RequestBodyRule } from "@prisma/client";
 
-export default abstract class EndpointsRepositories {
+export default abstract class EndpointsRepository {
   abstract getEndpointsJsonResponse(
     endpointId: string,
     requsetType: HttpMethod

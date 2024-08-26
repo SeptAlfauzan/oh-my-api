@@ -1,4 +1,4 @@
-import AuthRepositoriesImpl from "@/repositories/auth_repositories_impl";
+import AuthRepositoryImpl from "@/repositories/auth_repositories_impl";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { JWT_TOKEN_KEY } from "@/constanta";
@@ -12,7 +12,7 @@ export async function GET() {
 export async function POST(req: Request, res: Response) {
   try {
     const { email, password } = await req.json();
-    const user = await new AuthRepositoriesImpl().signin(email, password);
+    const user = await new AuthRepositoryImpl().signin(email, password);
     const token = await user.getIdToken();
     cookies().set(JWT_TOKEN_KEY, token.toString(), { secure: true });
 

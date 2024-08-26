@@ -1,7 +1,7 @@
 import { WorkspaceItem } from "@/interfaces";
 import { Workspace } from "@prisma/client";
 
-export default abstract class WorkspaceRepositories {
+export default abstract class WorkspaceRepository {
   abstract create(name: string, authorId: string): Promise<Workspace>;
   abstract delete(
     workspace: WorkspaceItem,

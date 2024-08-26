@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-export default abstract class AuthRepositories {
+export default abstract class AuthRepository {
   abstract signup(
     username: string,
     email: string,

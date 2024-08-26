@@ -1,5 +1,5 @@
 import { EndpointItem } from "@/interfaces";
-import EndpointsRepositoriesImpl from "@/repositories/endpoint_repositories_impl";
+import EndpointsRepositoryImpl from "@/repositories/endpoint_repositories_impl";
 import { HttpMethod } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 } from "uuid";
@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const workspaceId = searchParams.get("workspaceId");
 
-    const result = await new EndpointsRepositoriesImpl().getEndpoints(
+    const result = await new EndpointsRepositoryImpl().getEndpoints(
       workspaceId!
     );
     return NextResponse.json({
@@ -45,7 +45,7 @@ export async function POST(req: Request, res: Response) {
     };
     console.log(endpointItem);
 
-    const result = await new EndpointsRepositoriesImpl().createEndpoint(
+    const result = await new EndpointsRepositoryImpl().createEndpoint(
       endpointItem,
       jsonstr
     );

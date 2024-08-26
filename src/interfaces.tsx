@@ -24,3 +24,10 @@ export type EndpointItem = {
   lastEdited: string;
   requestType: HttpMethod;
 };
+
+export type DashboardClientItem = {
+  workspaces_count: number;
+  endpoints_count: number;
+  last_workspace_created: string;
+  last_endpoint_created: string;
+};

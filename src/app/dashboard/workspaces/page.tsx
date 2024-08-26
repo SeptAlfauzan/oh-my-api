@@ -13,6 +13,7 @@ import {
   SimpleGrid,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import DashboardTemplate from "../template";
 import CreateCard from "./widgets/create_card";
@@ -30,8 +31,7 @@ export default function Page() {
     Fetch.getData
   );
 
-  console.log(data);
-
+  const toast = useToast();
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [workspaceName, setWorkspaceName] = useState("");
@@ -41,10 +41,29 @@ export default function Page() {
       const workspace = await Fetch.postData<Workspace>("/api/workspaces", {
         name: workspaceName,
       });
-      alert("success create new workspace");
+      onClose();
+      toast({
+        title: `New workspace ${workspaceName} is created!.`,
+        description: "Successfully create new workspace!",
+        status: "info",
+        position: "top-right",
+        duration: 2000,
+        isClosable: true,
+      });
+      setWorkspaceName("");
     } catch (error) {
-      console.log(error);
-      alert(error);
+      const result = (error as Error).message;
+
+      onClose();
+      toast({
+        title: `New workspace ${workspaceName} failed to created!.`,
+        description: `Error: ${result}`,
+        status: "error",
+        position: "top-right",
+        duration: 2000,
+        isClosable: true,
+      });
+      setWorkspaceName("");
     }
   }
 
@@ -52,7 +71,7 @@ export default function Page() {
   if (isLoading) return <Text>loading...</Text>;
   return (
     <>
-      <SimpleGrid columns={3} spacing={4}>
+      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
         <CreateCard onClick={onOpen} />
         {(data ?? []).map((item, i) => (
           <WorkSpaceCard

@@ -21,7 +21,7 @@ export default function Sidebar({ items, activeItemIndex }: Props) {
   const [smMenuOn, setSmMenuOn] = useState(false);
   const toggleMenu = () => setSmMenuOn(!smMenuOn);
   return (
-    <Box position={{ base: "absolute", md: "relative" }}>
+    <Box position={{ base: "absolute", md: "relative" }} pl={4}>
       <IconButton
         icon={<MdMenu />}
         onClick={toggleMenu}

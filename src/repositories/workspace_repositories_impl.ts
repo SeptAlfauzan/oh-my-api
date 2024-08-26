@@ -1,11 +1,9 @@
-import WorkspaceRepositories from "@/domain/repositories/workspace_repositories";
+import WorkspaceRepository from "@/domain/repositories/workspace_repository";
 import { prisma } from "@/helper/prisma";
 import { WorkspaceItem } from "@/interfaces";
 import { Workspace } from "@prisma/client";
 
-export default class WorkspaceRepositoriesImpl
-  implements WorkspaceRepositories
-{
+export default class WorkspaceRepositoryImpl implements WorkspaceRepository {
   delete(workspace: WorkspaceItem, authorId: string): Promise<Workspace> {
     throw new Error("Method not implemented.");
   }

@@ -1,4 +1,4 @@
-import AuthRepositoriesImpl from "@/repositories/auth_repositories_impl";
+import AuthRepositoryImpl from "@/repositories/auth_repositories_impl";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -10,7 +10,7 @@ export async function GET() {
 export async function POST(req: Request, res: Response) {
   try {
     const { email, password, username } = await req.json();
-    const user = await new AuthRepositoriesImpl().signup(
+    const user = await new AuthRepositoryImpl().signup(
       username,
       email,
       password

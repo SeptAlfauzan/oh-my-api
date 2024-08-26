@@ -1,13 +1,11 @@
-import EndpointsRepositories from "@/domain/repositories/endpoints_repositories";
+import EndpointsRepository from "@/domain/repositories/endpoints_repository";
 import ImageKitHelper from "@/helper/imagekit_helper";
 import { prisma } from "@/helper/prisma";
 import { EndpointItem } from "@/interfaces";
 import { ApiEndpoint, HttpMethod, RequestBodyRule } from "@prisma/client";
 import { v4 } from "uuid";
 
-export default class EndpointsRepositoriesImpl
-  implements EndpointsRepositories
-{
+export default class EndpointsRepositoryImpl implements EndpointsRepository {
   async getEndpointsJsonResponse(
     workspaceId: string,
     requsetType: HttpMethod
