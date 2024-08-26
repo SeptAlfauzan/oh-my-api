@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output          = "../../node_modules/@prisma-db-dev/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id String @id
+  username String
+  workspaces Workspace[]
+  @@map("users")
+}
+
+model Workspace{
+  id String @id @default(uuid())
+  name String
+  last_edited DateTime @default(now())
+  author User @relation(fields: [author_id], references: [id])
+  author_id String
+  api_endpoints ApiEndpoint[]
+  @@map("workspaces")
+}
+
+model ApiEndpoint{
+  id String @id @default(uuid())
+  name String
+  desc String?
+  httpMethod      HttpMethod
+  jsonResponseUrl String
+  workspace Workspace @relation(fields: [workspace_id], references: [id])
+  workspace_id String
+  requestBodyRules RequestBodyRule[]
+  createdAt       DateTime            @default(now())
+  @@map("api_endpoints")
+}
+
+model RequestBodyRule {
+  id             String         @id @default(uuid())
+  api_endpoint  ApiEndpoint  @relation(fields: [api_endpoint_id], references: [id])
+  api_endpoint_id  String
+  field_name      String
+  field_type      String
+  is_required     Boolean
+  min_length      Int?
+  max_length      Int?
+  pattern        String?
+  useAuthorization Boolean @default(false)
+  @@map("request_body_rules")
+}
+
+
+enum HttpMethod {
+  GET
+  POST
+  PUT
+  DELETE
+  PATCH
+}
+

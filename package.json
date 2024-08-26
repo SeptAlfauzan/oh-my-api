@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma-generate-client:dev": "npx prisma generate --schema prisma/postgresql/schema.prisma",
+    "prisma-generate-client:prod": "npx prisma generate --schema prisma/cockroachdb/schema.prisma",
+    "migrate:dev": "npm run prisma-generate:dev && dotenv -e .env.development -- npx prisma migrate dev --schema prisma/postgresql/schema.prisma --name initial",
+    "migrate:prod": "npm run prisma-generate:prod && dotenv -e .env.production -- npx prisma migrate dev --schema prisma/cockroachdb/schema.prisma --name initial"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
@@ -30,6 +34,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/uuid": "^10.0.0",
+    "dotenv-cli": "^7.4.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "prisma": "^5.18.0",
