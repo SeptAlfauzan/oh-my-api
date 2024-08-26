@@ -8,20 +8,31 @@ import {
   ListItem,
   Text,
 } from "@chakra-ui/react";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { FaFireAlt } from "react-icons/fa";
 import { MdMenu } from "react-icons/md";
 
 type Props = {
-  activeItemIndex: number;
   items: SidebarItem[];
 };
 
-export default function Sidebar({ items, activeItemIndex }: Props) {
+export default function Sidebar({ items }: Props) {
+  const activeItemIndex = 0;
   const [smMenuOn, setSmMenuOn] = useState(false);
   const toggleMenu = () => setSmMenuOn(!smMenuOn);
+  const pathname = usePathname();
+  const pathnames = pathname.split("/");
+  const getFirstOrSecondPathname =
+    pathnames.length == 2 ? pathnames[1] : pathnames[2];
+
   return (
-    <Box position={{ base: "absolute", md: "relative" }} pl={4}>
+    <Box
+      position={{ base: "absolute", md: "relative" }}
+      px={4}
+      zIndex={10}
+      boxShadow={"xs"}
+    >
       <IconButton
         icon={<MdMenu />}
         onClick={toggleMenu}
@@ -70,7 +81,14 @@ export default function Sidebar({ items, activeItemIndex }: Props) {
               ) : (
                 <ListItem
                   backgroundColor={
-                    activeItemIndex == i ? "teal.100" : undefined
+                    getFirstOrSecondPathname == e.text.toLowerCase()
+                      ? "gray.600"
+                      : undefined
+                  }
+                  color={
+                    getFirstOrSecondPathname == e.text.toLowerCase()
+                      ? "white"
+                      : undefined
                   }
                   key={i}
                   onClick={() => {
@@ -82,7 +100,8 @@ export default function Sidebar({ items, activeItemIndex }: Props) {
                   paddingY={4}
                   _hover={{
                     cursor: "pointer",
-                    backgroundColor: "teal.100",
+                    backgroundColor: "gray.600",
+                    color: "white",
                   }}
                   display={"flex"}
                   gap={2}

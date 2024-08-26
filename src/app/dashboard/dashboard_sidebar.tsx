@@ -15,7 +15,6 @@ type Props = {
   onSignoutError: (message: string) => void;
 };
 export default function DashboardSidebar({ onSignoutError }: Props) {
-  const [activeIndex, setActiveIndex] = useState(0);
   const router = useRouter();
 
   const sidebarItems: SidebarItem[] = [
@@ -23,16 +22,14 @@ export default function DashboardSidebar({ onSignoutError }: Props) {
       text: "Dashboard",
       icon: <MdHome size={24} color="gray" />,
       onClick: () => {
-        setActiveIndex(0);
         router.push("/dashboard");
       },
       isSeparator: false,
     },
     {
-      text: "Workspace",
+      text: "Workspaces",
       icon: <MdWorkspaces size={24} color="gray" />,
       onClick: () => {
-        setActiveIndex(1);
         router.push("/dashboard/workspaces");
       },
       isSeparator: false,
@@ -47,7 +44,6 @@ export default function DashboardSidebar({ onSignoutError }: Props) {
       text: "Profile",
       icon: <MdAccountCircle size={24} color="gray" />,
       onClick: () => {
-        setActiveIndex(3);
         router.push("/dashboard/profile");
       },
       isSeparator: false,
@@ -56,7 +52,6 @@ export default function DashboardSidebar({ onSignoutError }: Props) {
       text: "Signout",
       icon: <MdLogout size={24} color="gray" />,
       onClick: async () => {
-        setActiveIndex(4);
         try {
           await Fetch.postData<string>("/api/signout", undefined);
           router.replace("/auth");
@@ -67,5 +62,5 @@ export default function DashboardSidebar({ onSignoutError }: Props) {
       isSeparator: false,
     },
   ];
-  return <Sidebar items={sidebarItems} activeItemIndex={activeIndex} />;
+  return <Sidebar items={sidebarItems} />;
 }

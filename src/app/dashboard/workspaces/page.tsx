@@ -15,7 +15,6 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import DashboardTemplate from "../template";
 import CreateCard from "./widgets/create_card";
 import WorkSpaceCard from "./widgets/workspace_card";
 import { useRouter } from "next/navigation";
