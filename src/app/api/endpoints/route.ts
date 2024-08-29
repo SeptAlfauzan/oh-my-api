@@ -23,16 +23,28 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: Request, res: Response) {
   try {
-    const { jsonstr, workspaceId, desc, name, requestType } = await req.json();
+    const {
+      jsonstr,
+      workspaceId,
+      desc,
+      name,
+      requestType,
+      requestbodyFields,
+      useHeaderAuthorization,
+    } = await req.json();
     const uuid = v4();
 
     const httpMethod =
       HttpMethod[
         `${requestType}`.toLocaleUpperCase() as keyof typeof HttpMethod
       ];
-    console.log(jsonstr, workspaceId, desc, name);
-    if (httpMethod != HttpMethod.GET)
-      throw Error("Currently Oh-My-API only support for GET request method 😢");
+    // console.log(jsonstr, workspaceId, desc, name);
+    // if (httpMethod != HttpMethod.GET)
+    //   console.log("useHeaderAuthorization", useHeaderAuthorization);
+    // return NextResponse.json(
+    //   { error: "Currently Oh-My-API only support for GET request method 😢" },
+    //   { status: 500 }
+    // );
 
     const endpointItem: EndpointItem = {
       id: uuid,
@@ -42,12 +54,14 @@ export async function POST(req: Request, res: Response) {
       jsonResponseUrl: jsonstr,
       lastEdited: "",
       requestType: httpMethod,
+      useHeaderAuthorization: useHeaderAuthorization,
     };
     console.log(endpointItem);
 
     const result = await new EndpointsRepositoryImpl().createEndpoint(
       endpointItem,
-      jsonstr
+      jsonstr,
+      requestbodyFields
     );
     return NextResponse.json({ data: result });
   } catch (error) {

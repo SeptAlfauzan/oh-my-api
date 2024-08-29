@@ -25,7 +25,7 @@ export default class Fetch {
         });
       }
       if (!res.ok) {
-        throw new Error(`Request error ${res.text}`);
+        throw new Error(`Request error ${res.statusText}`);
       } else {
         const jsonResult = await res.json();
         return jsonResult.data as T;

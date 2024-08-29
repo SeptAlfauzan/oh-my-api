@@ -22,6 +22,7 @@ export type EndpointItem = {
   name: string;
   jsonResponseUrl: string;
   lastEdited: string;
+  useHeaderAuthorization: boolean;
   requestType: HttpMethod;
 };
 
@@ -32,7 +33,7 @@ export type DashboardClientItem = {
   last_endpoint_created: string;
 };
 
-export type RequestBodyField = {
+export type RequestBodyFieldRule = {
   name: string | undefined;
-  data_type: FieldType | undefined;
+  dataType: FieldType | undefined;
 };

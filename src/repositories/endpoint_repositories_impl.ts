@@ -1,15 +1,21 @@
 import EndpointsRepository from "@/domain/repositories/endpoints_repository";
 import ImageKitHelper from "@/helper/imagekit_helper";
 import { prisma } from "@/helper/prisma";
-import { EndpointItem } from "@/interfaces";
-import { ApiEndpoint, HttpMethod, RequestBodyRule } from "@prisma/client";
+import { EndpointItem, RequestBodyFieldRule } from "@/interfaces";
+import {
+  ApiEndpoint,
+  FieldType,
+  HttpMethod,
+  RequestBodyRule,
+} from "@prisma/client";
+import { UploadResponse } from "imagekit/dist/libs/interfaces";
 import { v4 } from "uuid";
 
 export default class EndpointsRepositoryImpl implements EndpointsRepository {
   async getEndpointsJsonResponse(
     workspaceId: string,
     requsetType: HttpMethod
-  ): Promise<string> {
+  ): Promise<ApiEndpoint> {
     try {
       const result = await prisma.apiEndpoint.findFirst({
         where: {
@@ -19,7 +25,7 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
       });
       const jsonUrl = result?.jsonResponseUrl;
       if (jsonUrl == null) throw Error("Invalid json response");
-      return jsonUrl;
+      return result!;
     } catch (error) {
       throw error;
     }
@@ -55,8 +61,9 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
   async createEndpoint(
     endpointItem: EndpointItem,
     jsonResponseStr: string,
-    requestBodyRules?: RequestBodyRule[]
+    requestBodyRules?: RequestBodyFieldRule[]
   ): Promise<ApiEndpoint> {
+    let resultImagekit: UploadResponse;
     try {
       const uuid = v4();
       const fileName = `${uuid}.json`;
@@ -68,6 +75,12 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
       );
 
       endpointItem.jsonResponseUrl = resultImagekit.url;
+      console.log(
+        "======",
+        endpointItem,
+        requestBodyRules != undefined,
+        requestBodyRules!.length > 0
+      );
 
       const result = await prisma.apiEndpoint.create({
         data: {
@@ -76,11 +89,30 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
           desc: endpointItem.desc,
           workspace_id: endpointItem.workspaceId,
           jsonResponseUrl: resultImagekit.url,
+          useAuthorization: true,
           httpMethod: endpointItem.requestType,
         },
       });
+
+      if (requestBodyRules != undefined && requestBodyRules!.length > 0) {
+        const requestBodyRulesPrisma: RequestBodyRule[] = requestBodyRules.map(
+          (e) => {
+            return {
+              api_endpoint_id: uuid,
+              field_name: e.name,
+              field_type: e.dataType,
+              is_required: true,
+            } as RequestBodyRule;
+          }
+        );
+        await prisma.requestBodyRule.createMany({
+          data: requestBodyRulesPrisma,
+        });
+      }
+
       return result;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }

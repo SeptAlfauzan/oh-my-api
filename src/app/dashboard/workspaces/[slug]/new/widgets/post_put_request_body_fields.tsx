@@ -1,4 +1,4 @@
-import { RequestBodyField } from "@/interfaces";
+import { RequestBodyFieldRule } from "@/interfaces";
 import { CloseIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -14,16 +14,18 @@ import { FieldType } from "@prisma/client";
 import { useState, useCallback } from "react";
 
 type Props = {
-  onUpdate: (value: RequestBodyField[]) => void;
+  onUpdate: (value: RequestBodyFieldRule[]) => void;
 };
 
 export default function PostPutRequestBodyFields({ onUpdate }: Props) {
-  const [fields, setFields] = useState<RequestBodyField[]>([]);
+  const [fields, setFields] = useState<RequestBodyFieldRule[]>([
+    { name: undefined, dataType: undefined },
+  ]);
 
   const addNewFields = useCallback(() => {
     setFields((prevFields) => [
       ...prevFields,
-      { name: undefined, data_type: undefined },
+      { name: undefined, dataType: undefined },
     ]);
   }, []);
 
@@ -34,7 +36,7 @@ export default function PostPutRequestBodyFields({ onUpdate }: Props) {
   }, []);
 
   const updateFieldsAt = useCallback(
-    (field: RequestBodyField, index: number) => {
+    (field: RequestBodyFieldRule, index: number) => {
       setFields((prevFields) => {
         const newFields = [...prevFields];
         newFields[index] = field;
@@ -69,10 +71,10 @@ export default function PostPutRequestBodyFields({ onUpdate }: Props) {
               placeholder="Select data type"
               width="180"
               fontSize={12}
-              value={field.data_type || ""}
+              value={field.dataType || ""}
               onChange={(e) => {
                 updateFieldsAt(
-                  { ...field, data_type: e.target.value as FieldType },
+                  { ...field, dataType: e.target.value as FieldType },
                   index
                 );
               }}
