@@ -56,7 +56,6 @@ export async function POST(req: Request, res: Response) {
       requestType: httpMethod,
       useHeaderAuthorization: useHeaderAuthorization,
     };
-    console.log(endpointItem);
 
     const result = await new EndpointsRepositoryImpl().createEndpoint(
       endpointItem,

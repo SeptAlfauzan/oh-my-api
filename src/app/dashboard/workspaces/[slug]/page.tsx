@@ -17,7 +17,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const items = data ?? [];
   return (
     <Box>
-      <List spacing={3}>
+      <List spacing={3} mb={12}>
         {items.length == 0 ? (
           <Text>No API endpoint has created yet</Text>
         ) : (

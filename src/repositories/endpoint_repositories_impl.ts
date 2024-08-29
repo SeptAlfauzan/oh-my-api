@@ -1,7 +1,11 @@
 import EndpointsRepository from "@/domain/repositories/endpoints_repository";
 import ImageKitHelper from "@/helper/imagekit_helper";
 import { prisma } from "@/helper/prisma";
-import { EndpointItem, RequestBodyFieldRule } from "@/interfaces";
+import {
+  ApiEndpointOutput,
+  EndpointItem,
+  RequestBodyFieldRule,
+} from "@/interfaces";
 import {
   ApiEndpoint,
   FieldType,
@@ -15,12 +19,15 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
   async getEndpointsJsonResponse(
     workspaceId: string,
     requsetType: HttpMethod
-  ): Promise<ApiEndpoint> {
+  ): Promise<ApiEndpointOutput> {
     try {
       const result = await prisma.apiEndpoint.findFirst({
         where: {
           id: workspaceId,
           httpMethod: requsetType,
+        },
+        include: {
+          requestBodyRules: true,
         },
       });
       const jsonUrl = result?.jsonResponseUrl;
@@ -75,12 +82,6 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
       );
 
       endpointItem.jsonResponseUrl = resultImagekit.url;
-      console.log(
-        "======",
-        endpointItem,
-        requestBodyRules != undefined,
-        requestBodyRules!.length > 0
-      );
 
       const result = await prisma.apiEndpoint.create({
         data: {
@@ -94,7 +95,8 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
         },
       });
 
-      if (requestBodyRules != undefined && requestBodyRules!.length > 0) {
+      console.log("requestBodyRules", requestBodyRules);
+      if (requestBodyRules) {
         const requestBodyRulesPrisma: RequestBodyRule[] = requestBodyRules.map(
           (e) => {
             return {

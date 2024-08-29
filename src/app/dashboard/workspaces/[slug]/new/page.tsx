@@ -15,7 +15,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [enabledButton, setEnabledButton] = useState(false);
   const [useHeaderAuthorization, setUseHeaderAuthorization] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [fields, setFields] = useState<RequestBodyFieldRule[]>([]);
+  const [fields, setFields] = useState<RequestBodyFieldRule[]>();
 
   const router = useRouter();
   const toast = useToast();

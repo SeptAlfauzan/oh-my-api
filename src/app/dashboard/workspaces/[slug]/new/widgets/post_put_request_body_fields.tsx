@@ -11,7 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FieldType } from "@prisma/client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 type Props = {
   onUpdate: (value: RequestBodyFieldRule[]) => void;
@@ -27,13 +27,20 @@ export default function PostPutRequestBodyFields({ onUpdate }: Props) {
       ...prevFields,
       { name: undefined, dataType: undefined },
     ]);
-  }, []);
+    // triggerOnUpdate();
+    onUpdate(fields);
+  }, [fields, onUpdate]);
 
-  const removeFieldsAt = useCallback((indexToRemove: number) => {
-    setFields((prevFields) =>
-      prevFields.filter((_, index) => index !== indexToRemove)
-    );
-  }, []);
+  const removeFieldsAt = useCallback(
+    (indexToRemove: number) => {
+      setFields((prevFields) =>
+        prevFields.filter((_, index) => index !== indexToRemove)
+      );
+      // triggerOnUpdate();
+      onUpdate(fields);
+    },
+    [fields, onUpdate]
+  );
 
   const updateFieldsAt = useCallback(
     (field: RequestBodyFieldRule, index: number) => {
@@ -42,12 +49,16 @@ export default function PostPutRequestBodyFields({ onUpdate }: Props) {
         newFields[index] = field;
         return newFields;
       });
+      // triggerOnUpdate();
+      console.table(fields);
+      onUpdate(fields);
     },
-    []
+    [fields, onUpdate]
   );
 
-  const triggerOnUpdate = useCallback(() => {
+  useEffect(() => {
     onUpdate(fields);
+    console.table(fields);
   }, [fields, onUpdate]);
 
   return (

@@ -37,3 +37,25 @@ export type RequestBodyFieldRule = {
   name: string | undefined;
   dataType: FieldType | undefined;
 };
+
+export interface RequestBodyRuleOutput {
+  id: string;
+  field_name: string;
+  field_type: FieldType;
+  is_required: boolean;
+  min_length?: number | null;
+  max_length?: number | null;
+  pattern?: string | null;
+}
+
+export interface ApiEndpointOutput {
+  id: string;
+  name: string;
+  desc?: string | null;
+  httpMethod: HttpMethod;
+  jsonResponseUrl: string;
+  workspace_id: string;
+  useAuthorization: boolean;
+  createdAt: Date;
+  requestBodyRules: RequestBodyRuleOutput[];
+}
