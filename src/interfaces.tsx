@@ -1,4 +1,4 @@
-import { HttpMethod } from "@prisma/client";
+import { HttpMethod, FieldType } from "@prisma/client";
 import { ReactNode } from "react";
 
 export interface SidebarItem {
@@ -30,4 +30,9 @@ export type DashboardClientItem = {
   endpoints_count: number;
   last_workspace_created: string;
   last_endpoint_created: string;
+};
+
+export type RequestBodyField = {
+  name: string | undefined;
+  data_type: FieldType | undefined;
 };

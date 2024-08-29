@@ -4,6 +4,7 @@ import FileUpload from "@/widgets/file_upload";
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormLabel,
   Input,
@@ -18,6 +19,7 @@ import { HttpMethod } from "@prisma/client";
 import { editor } from "monaco-editor";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import PostPutRequsetBodyFields from "./widgets/post_put_request_body_fields";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const [editorValue, setEditorValue] = useState("");
@@ -140,6 +142,11 @@ export default function Page({ params }: { params: { slug: string } }) {
               <option value={HttpMethod.DELETE.toString()}>DELETE</option>
             </Select>
           </FormControl>
+          <FormControl>
+            <Checkbox colorScheme="gray" defaultChecked size="lg">
+              Use Header Authorization
+            </Checkbox>
+          </FormControl>
 
           <FormControl isRequired>
             <FormLabel>Desc</FormLabel>
@@ -151,6 +158,16 @@ export default function Page({ params }: { params: { slug: string } }) {
             />
           </FormControl>
         </SimpleGrid>
+
+        {(httpMethod as HttpMethod) == HttpMethod.POST ||
+        (httpMethod as HttpMethod) == HttpMethod.PUT ? (
+          <PostPutRequsetBodyFields
+            onUpdate={(value) => console.table(value)}
+          />
+        ) : (
+          <></>
+        )}
+
         <Box display={"flex"} flexDir={"column"} gap={2}>
           <Text>Expected json result</Text>
           <FileUpload

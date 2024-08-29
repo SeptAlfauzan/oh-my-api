@@ -10,8 +10,8 @@
     "prisma-generate-client:dev": "npx prisma generate --schema prisma/postgresql/schema.prisma",
     "prisma-generate-client:prod": "npx prisma generate --schema prisma/cockroachdb/schema.prisma",
     "postinstall": "npm run prisma-generate-client:prod && npm run prisma-generate-client:dev",
-    "migrate:dev": "npm run prisma-generate:dev && dotenv -e .env.development -- npx prisma migrate dev --schema prisma/postgresql/schema.prisma --name initial",
-    "migrate:prod": "npm run prisma-generate:prod && dotenv -e .env.production -- npx prisma migrate dev --schema prisma/cockroachdb/schema.prisma --name initial"
+    "migrate:dev": "npm run prisma-generate-client:dev && dotenv -e .env.development -- npx prisma migrate dev --schema prisma/postgresql/schema.prisma --name initial",
+    "migrate:prod": "npm run prisma-generate-client:prod && dotenv -e .env.production -- npx prisma migrate dev --schema prisma/cockroachdb/schema.prisma --name initial"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",

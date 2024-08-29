@@ -16,6 +16,7 @@ export default function DashboardContainer({ children }: Props) {
         fontSize={{ base: 12, md: "xl" }}
         color={"gray.400"}
         textOverflow={"ellipsis"}
+        width={{ base: 320, md: "100%" }}
       >
         {pathname}
       </Text>

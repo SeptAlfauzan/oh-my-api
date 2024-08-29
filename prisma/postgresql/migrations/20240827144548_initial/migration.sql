@@ -1,32 +1,35 @@
 -- CreateEnum
 CREATE TYPE "HttpMethod" AS ENUM ('GET', 'POST', 'PUT', 'DELETE', 'PATCH');
 
+-- CreateEnum
+CREATE TYPE "FieldType" AS ENUM ('INTEGER', 'DOUBLE', 'TEXT', 'BOOLEAN');
+
 -- CreateTable
 CREATE TABLE "users" (
-    "id" STRING NOT NULL,
-    "username" STRING NOT NULL,
+    "id" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "workspaces" (
-    "id" STRING NOT NULL,
-    "name" STRING NOT NULL,
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "last_edited" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "author_id" STRING NOT NULL,
+    "author_id" TEXT NOT NULL,
 
     CONSTRAINT "workspaces_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "api_endpoints" (
-    "id" STRING NOT NULL,
-    "name" STRING NOT NULL,
-    "desc" STRING,
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "desc" TEXT,
     "httpMethod" "HttpMethod" NOT NULL,
-    "jsonResponseUrl" STRING NOT NULL,
-    "workspace_id" STRING NOT NULL,
+    "jsonResponseUrl" TEXT NOT NULL,
+    "workspace_id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "api_endpoints_pkey" PRIMARY KEY ("id")
@@ -34,15 +37,15 @@ CREATE TABLE "api_endpoints" (
 
 -- CreateTable
 CREATE TABLE "request_body_rules" (
-    "id" STRING NOT NULL,
-    "api_endpoint_id" STRING NOT NULL,
-    "field_name" STRING NOT NULL,
-    "field_type" STRING NOT NULL,
-    "is_required" BOOL NOT NULL,
-    "min_length" INT4,
-    "max_length" INT4,
-    "pattern" STRING,
-    "useAuthorization" BOOL NOT NULL DEFAULT false,
+    "id" TEXT NOT NULL,
+    "api_endpoint_id" TEXT NOT NULL,
+    "field_name" TEXT NOT NULL,
+    "field_type" "FieldType" NOT NULL,
+    "is_required" BOOLEAN NOT NULL,
+    "min_length" INTEGER,
+    "max_length" INTEGER,
+    "pattern" TEXT,
+    "useAuthorization" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "request_body_rules_pkey" PRIMARY KEY ("id")
 );

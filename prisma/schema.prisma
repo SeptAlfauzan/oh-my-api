@@ -49,7 +49,7 @@ model RequestBodyRule {
   api_endpoint  ApiEndpoint  @relation(fields: [api_endpoint_id], references: [id])
   api_endpoint_id  String
   field_name      String
-  field_type      String
+  field_type      FieldType
   is_required     Boolean
   min_length      Int?
   max_length      Int?
@@ -57,7 +57,6 @@ model RequestBodyRule {
   useAuthorization Boolean @default(false)
   @@map("request_body_rules")
 }
-
 
 enum HttpMethod {
   GET
@@ -67,3 +66,9 @@ enum HttpMethod {
   PATCH
 }
 
+enum FieldType {
+  INTEGER
+  DOUBLE
+  TEXT
+  BOOLEAN
+}
