@@ -41,21 +41,30 @@ model ApiEndpoint{
   workspace_id String
   useAuthorization Boolean @default(false)
   requestBodyRules RequestBodyRule[]
-  createdAt       DateTime            @default(now())
+  parameter_endpoints ParameterEndpoint[]
+  createdAt DateTime @default(now())
   @@map("api_endpoints")
 }
 
 model RequestBodyRule {
-  id             String         @id @default(uuid())
+  id String @id @default(uuid())
+  api_endpoint ApiEndpoint  @relation(fields: [api_endpoint_id], references: [id])
+  api_endpoint_id String
+  field_name String
+  field_type FieldType
+  is_required Boolean
+  min_length Int?
+  max_length Int?
+  pattern String?
+  @@map("request_body_rules")
+}
+
+model ParameterEndpoint{
+  id String @id @default(uuid())
+  name String
   api_endpoint  ApiEndpoint  @relation(fields: [api_endpoint_id], references: [id])
   api_endpoint_id  String
-  field_name      String
-  field_type      FieldType
-  is_required     Boolean
-  min_length      Int?
-  max_length      Int?
-  pattern        String?
-  @@map("request_body_rules")
+  @@map("parameter_endpoints")
 }
 
 enum HttpMethod {

@@ -11,6 +11,7 @@ export default abstract class EndpointsRepository {
     requsetType: HttpMethod
   ): Promise<ApiEndpointOutput>;
   abstract getEndpoints(workspaceId: string): Promise<EndpointItem[]>;
+  abstract getEndpoint(endpointId: string): Promise<ApiEndpointOutput>;
   abstract deleteEndpoint(endpointId: string): Promise<ApiEndpoint>;
   abstract updateEndpoint(endpoint: ApiEndpoint): Promise<ApiEndpoint>;
   abstract createEndpoint(

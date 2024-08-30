@@ -16,6 +16,24 @@ import { UploadResponse } from "imagekit/dist/libs/interfaces";
 import { v4 } from "uuid";
 
 export default class EndpointsRepositoryImpl implements EndpointsRepository {
+  async getEndpoint(endpointId: string): Promise<ApiEndpointOutput> {
+    try {
+      const result = await prisma.apiEndpoint.findFirst({
+        where: {
+          id: endpointId,
+        },
+        include: {
+          requestBodyRules: true,
+        },
+      });
+
+      if (result == null) throw Error("Invalid endpoint id!");
+
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
   async getEndpointsJsonResponse(
     workspaceId: string,
     requsetType: HttpMethod

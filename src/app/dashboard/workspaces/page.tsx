@@ -77,7 +77,7 @@ export default function Page() {
             key={i}
             item={item}
             props={{
-              _hover: { cursor: "pointer", background: "teal.100" },
+              _hover: { cursor: "pointer", background: "orange.100" },
               onClick: () => router.push(`/dashboard/workspaces/${item.id}`),
             }}
           />

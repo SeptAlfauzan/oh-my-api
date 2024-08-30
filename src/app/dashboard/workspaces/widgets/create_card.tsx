@@ -19,7 +19,7 @@ export default function CreateCard({ onClick }: Props) {
         <Text fontSize={12}>Click this card to create new workspace</Text>
       </Box>
       <Box
-        background={"teal.100"}
+        background={"orange"}
         position={"absolute"}
         borderRadius={100}
         width={40}

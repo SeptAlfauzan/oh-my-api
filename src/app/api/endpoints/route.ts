@@ -8,6 +8,20 @@ export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
     const workspaceId = searchParams.get("workspaceId");
+    const endpointId = searchParams.get("endpointId");
+
+    if (endpointId) {
+      const result = await new EndpointsRepositoryImpl().getEndpoint(
+        endpointId!
+      );
+
+      const json = await (await fetch(result.jsonResponseUrl)).json();
+      result.jsonResponse = json;
+
+      return NextResponse.json({
+        data: result,
+      });
+    }
 
     const result = await new EndpointsRepositoryImpl().getEndpoints(
       workspaceId!

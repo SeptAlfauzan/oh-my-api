@@ -21,7 +21,13 @@ export default function Page({ params }: { params: { slug: string } }) {
         {items.length == 0 ? (
           <Text>No API endpoint has created yet</Text>
         ) : (
-          items.map((item, i) => <WorkspaceEndpointItem key={i} item={item} />)
+          items.map((item, i) => (
+            <WorkspaceEndpointItem
+              key={i}
+              item={item}
+              url={`/dashboard/workspaces/${params.slug}/endpoints/${item.id}`}
+            />
+          ))
         )}
       </List>
       <Link

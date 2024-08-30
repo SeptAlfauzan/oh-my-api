@@ -54,8 +54,8 @@ export interface ApiEndpointOutput {
   desc?: string | null;
   httpMethod: HttpMethod;
   jsonResponseUrl: string;
-  workspace_id: string;
   useAuthorization: boolean;
+  jsonResponse: string | null;
   createdAt: Date;
   requestBodyRules: RequestBodyRuleOutput[];
 }

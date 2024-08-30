@@ -41,6 +41,7 @@ model ApiEndpoint{
   workspace_id String
   useAuthorization Boolean @default(false)
   requestBodyRules RequestBodyRule[]
+  parameter_endpoints ParameterEndpoint[]
   createdAt       DateTime            @default(now())
   @@map("api_endpoints")
 }
@@ -57,6 +58,15 @@ model RequestBodyRule {
   pattern        String?
   @@map("request_body_rules")
 }
+
+model ParameterEndpoint{
+  id String @id @default(uuid())
+  name String
+  api_endpoint  ApiEndpoint  @relation(fields: [api_endpoint_id], references: [id])
+  api_endpoint_id  String
+  @@map("parameter_endpoints")
+}
+
 
 enum HttpMethod {
   GET
