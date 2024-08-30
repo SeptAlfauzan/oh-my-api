@@ -3,16 +3,13 @@ import Fetch from "@/helper/fetch";
 import { ApiEndpointOutput } from "@/interfaces";
 import DetailEndpointComponent from "@/templates/detail_api_endpoint";
 import { copyToClipboard } from "@/utils/copy_clipboard";
-import { Box, Button, Text, useToast } from "@chakra-ui/react";
+import { Box, Heading, Text, useToast } from "@chakra-ui/react";
 import { HttpMethod } from "@prisma/client";
+import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
 
-export default function Page({
-  params,
-}: {
-  params: { slug: string; id: string };
-}) {
+export default function Page({ params }: { params: { id: string } }) {
   const toast = useToast();
   const { data, error, isLoading } = useSWR<ApiEndpointOutput, Error, any>(
     `/api/endpoints?endpointId=${params.id}`,
@@ -38,32 +35,6 @@ export default function Page({
     } catch (error) {
       toast({
         title: "End to end endpoint url failed to copy!.",
-        description: "Copy fail!!",
-        status: "error",
-        position: "top-right",
-        duration: 2000,
-        isClosable: true,
-      });
-    }
-  }
-
-  async function handleCopyClipBoardSharePage() {
-    try {
-      await copyToClipboard({
-        message: "-",
-        value: `http://localhost:3000/share/${params.id}`,
-      });
-      toast({
-        title: "Share page of this share url is copied!.",
-        description: "Copy success!!",
-        status: "success",
-        position: "top-right",
-        duration: 2000,
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: "EShare page of this share url failed to copy!.",
         description: "Copy fail!!",
         status: "error",
         position: "top-right",
@@ -105,24 +76,32 @@ export default function Page({
   if (isLoading) return <Text>Loading endpoint details...</Text>;
 
   return (
-    <Box>
-      <Button
-        background={"orange"}
-        position={"fixed"}
+    <Box minH={"100vh"}>
+      <Box px={{ md: 32, base: 12 }} pb={24}>
+        <Heading>API: {data?.name}</Heading>
+        <Text mb={12}>Desc: {data?.desc}</Text>
+        <DetailEndpointComponent
+          id={params.id}
+          data={data}
+          editorData={editorData}
+          onLoadingExecute={onLoadingExecute}
+          handleCopyClipBoard={handleCopyClipBoard}
+          handleExecuteEndpoint={handleExecuteEndpoint}
+        />
+      </Box>
+      <Box
         bottom={4}
-        right={4}
-        onClick={handleCopyClipBoardSharePage}
+        position={"absolute"}
+        display={"flex"}
+        justifyContent={"center"}
+        width={"100vw"}
+        gap={2}
       >
-        Share this
-      </Button>
-      <DetailEndpointComponent
-        id={params.id}
-        data={data}
-        editorData={editorData}
-        onLoadingExecute={onLoadingExecute}
-        handleCopyClipBoard={handleCopyClipBoard}
-        handleExecuteEndpoint={handleExecuteEndpoint}
-      />
+        <Text>Created using</Text>
+        <Link href={"/"}>
+          <Text fontWeight={"bold"}>Oh-My-API 🔥</Text>
+        </Link>
+      </Box>
     </Box>
   );
 }

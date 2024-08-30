@@ -28,8 +28,8 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
       });
 
       if (result == null) throw Error("Invalid endpoint id!");
-
-      return result;
+      const res: ApiEndpointOutput = { ...result, jsonResponse: null };
+      return res;
     } catch (error) {
       throw error;
     }
@@ -49,8 +49,12 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
         },
       });
       const jsonUrl = result?.jsonResponseUrl;
+
+      if (result == null) throw Error("Invalid endpoint id!");
       if (jsonUrl == null) throw Error("Invalid json response");
-      return result!;
+
+      const res: ApiEndpointOutput = { ...result, jsonResponse: null };
+      return res;
     } catch (error) {
       throw error;
     }
