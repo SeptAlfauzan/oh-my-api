@@ -95,6 +95,7 @@ function isBoolean(value?: string | number | boolean | null) {
 }
 
 function checkUseHeaderAuthorization(api: ApiEndpointOutput, req: NextRequest) {
+  console.log("use header authorization", api.useAuthorization);
   if (api.useAuthorization) {
     const tokenAuthorization = req.headers
       .get("Authorization")

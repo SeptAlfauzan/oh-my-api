@@ -35,7 +35,7 @@ const DetailEndpointComponent: React.FC<Props> = ({
         alignItems={"center"}
       >
         <Text flex={1} textOverflow={"ellipsis"} noOfLines={1}>
-          ${window.location.origin}/api/end-to-end?id={id}
+          {window.location.origin}/api/end-to-end?id={id}
         </Text>
         <Button
           rightIcon={<MdCopyAll />}

@@ -91,7 +91,10 @@ export default function NewEndpointForm({
             <Checkbox
               colorScheme="gray"
               size="lg"
-              onChange={(e) => setUseHeaderAuthorization(e.target.checked)}
+              onChange={(e) => {
+                // console.log(e.target.checked);
+                setUseHeaderAuthorization(e.target.checked);
+              }}
             >
               Use Header Authorization
             </Checkbox>

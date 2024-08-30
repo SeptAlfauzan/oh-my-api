@@ -112,7 +112,7 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
           desc: endpointItem.desc,
           workspace_id: endpointItem.workspaceId,
           jsonResponseUrl: resultImagekit.url,
-          useAuthorization: true,
+          useAuthorization: endpointItem.useHeaderAuthorization,
           httpMethod: endpointItem.requestType,
         },
       });
