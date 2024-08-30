@@ -71,7 +71,7 @@ export default function WorkspaceEndpointItem({ item, url }: Props) {
           try {
             await copyToClipboard({
               message: "-",
-              value: `http://localhost:3000/api/end-to-end?id=${item.id}`,
+              value: `${window.location.origin}/api/end-to-end?id=${item.id}`,
             });
             toast({
               title: "End to end endpoint url is copied!.",

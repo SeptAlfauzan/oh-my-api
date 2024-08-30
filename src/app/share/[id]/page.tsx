@@ -22,7 +22,7 @@ export default function Page({ params }: { params: { id: string } }) {
     try {
       await copyToClipboard({
         message: "-",
-        value: `http://localhost:3000/api/end-to-end?id=${params.id}`,
+        value: `${window.location.origin}/api/end-to-end?id=${params.id}`,
       });
       toast({
         title: "End to end endpoint url is copied!.",
@@ -51,7 +51,7 @@ export default function Page({ params }: { params: { id: string } }) {
       switch (data?.httpMethod) {
         case HttpMethod.GET:
           result = await Fetch.getDataRaw(
-            `http://localhost:3000/api/end-to-end?id=${params.id}`
+            `${window.location.origin}/api/end-to-end?id=${params.id}`
           );
           break;
         default:

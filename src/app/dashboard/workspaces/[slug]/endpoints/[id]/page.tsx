@@ -25,7 +25,7 @@ export default function Page({
     try {
       await copyToClipboard({
         message: "-",
-        value: `http://localhost:3000/api/end-to-end?id=${params.id}`,
+        value: `${window.location.origin}/api/end-to-end?id=${params.id}`,
       });
       toast({
         title: "End to end endpoint url is copied!.",
@@ -51,7 +51,7 @@ export default function Page({
     try {
       await copyToClipboard({
         message: "-",
-        value: `http://localhost:3000/share/${params.id}`,
+        value: `${window.location.origin}/share/${params.id}`,
       });
       toast({
         title: "Share page of this share url is copied!.",
@@ -80,7 +80,7 @@ export default function Page({
       switch (data?.httpMethod) {
         case HttpMethod.GET:
           result = await Fetch.getDataRaw(
-            `http://localhost:3000/api/end-to-end?id=${params.id}`
+            `${window.location.origin}/api/end-to-end?id=${params.id}`
           );
           break;
         default:
