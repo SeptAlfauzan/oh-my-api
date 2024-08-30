@@ -53,6 +53,7 @@ export interface ApiEndpointOutput {
   name: string;
   desc?: string | null;
   httpMethod: HttpMethod;
+  jsonResponseFileId: string;
   jsonResponseUrl: string;
   useAuthorization: boolean;
   jsonResponse: string | null;

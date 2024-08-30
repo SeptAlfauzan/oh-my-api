@@ -36,6 +36,7 @@ model ApiEndpoint{
   name String
   desc String?
   httpMethod      HttpMethod
+  json_response_file_id String @default("")
   jsonResponseUrl String
   workspace Workspace @relation(fields: [workspace_id], references: [id])
   workspace_id String

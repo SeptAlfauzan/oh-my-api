@@ -54,10 +54,19 @@ export default class ImageKitHelper {
         useUniqueFileName: true,
         tags: ["json"],
       });
-      console.log("JSON upload successful:", result);
+      (await result).fileId;
       return result;
     } catch (error) {
       console.error("JSON upload failed:", error);
+      throw error;
+    }
+  }
+
+  public async deleteJsonFile(fileId: string) {
+    try {
+      const result = await this.imagekit.deleteFile(fileId);
+      return result;
+    } catch (error) {
       throw error;
     }
   }

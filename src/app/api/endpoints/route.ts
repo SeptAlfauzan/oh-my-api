@@ -35,6 +35,23 @@ export async function GET(req: NextRequest) {
   }
 }
 
+export async function DELETE(req: NextRequest) {
+  try {
+    const searchParams = req.nextUrl.searchParams;
+    const endpointId = searchParams.get("endpointId");
+
+    const result = await new EndpointsRepositoryImpl().deleteEndpoint(
+      endpointId!
+    );
+    return NextResponse.json({
+      data: result,
+    });
+  } catch (error) {
+    const result = (error as Error).message;
+    return NextResponse.json({ error: result }, { status: 500 });
+  }
+}
+
 export async function POST(req: Request, res: Response) {
   try {
     const {

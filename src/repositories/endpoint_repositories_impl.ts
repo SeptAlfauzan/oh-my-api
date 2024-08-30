@@ -28,7 +28,11 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
       });
 
       if (result == null) throw Error("Invalid endpoint id!");
-      const res: ApiEndpointOutput = { ...result, jsonResponse: null };
+      const res: ApiEndpointOutput = {
+        ...result,
+        jsonResponse: null,
+        jsonResponseFileId: result.json_response_file_id,
+      };
       return res;
     } catch (error) {
       throw error;
@@ -53,7 +57,11 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
       if (result == null) throw Error("Invalid endpoint id!");
       if (jsonUrl == null) throw Error("Invalid json response");
 
-      const res: ApiEndpointOutput = { ...result, jsonResponse: null };
+      const res: ApiEndpointOutput = {
+        ...result,
+        jsonResponse: null,
+        jsonResponseFileId: result.json_response_file_id,
+      };
       return res;
     } catch (error) {
       throw error;
@@ -81,8 +89,35 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
       throw error;
     }
   }
-  deleteEndpoint(endpointId: string): Promise<ApiEndpoint> {
-    throw new Error("Method not implemented.");
+  async deleteEndpoint(endpointId: string): Promise<ApiEndpoint> {
+    try {
+      const result = await prisma.$transaction(async (tx) => {
+        // Delete related RequestBodyRules
+        await tx.requestBodyRule.deleteMany({
+          where: { api_endpoint_id: endpointId },
+        });
+        // Delete related ParameterEndpoints
+        await tx.parameterEndpoint.deleteMany({
+          where: { api_endpoint_id: endpointId },
+        });
+        // Finally, delete the ApiEndpoint
+        const deletedApiEndpoint = await tx.apiEndpoint.delete({
+          where: { id: endpointId },
+        });
+
+        await ImageKitHelper.getInstance().deleteJsonFile(
+          deletedApiEndpoint.json_response_file_id
+        );
+
+        return deletedApiEndpoint;
+      });
+
+      console.log("Deleted ApiEndpoint:", result);
+      return result;
+    } catch (error) {
+      console.error("Error deleting ApiEndpoint with relations:", error);
+      throw error;
+    }
   }
   updateEndpoint(endpoint: ApiEndpoint): Promise<ApiEndpoint> {
     throw new Error("Method not implemented.");
@@ -111,6 +146,7 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
           name: endpointItem.name,
           desc: endpointItem.desc,
           workspace_id: endpointItem.workspaceId,
+          json_response_file_id: resultImagekit.fileId,
           jsonResponseUrl: resultImagekit.url,
           useAuthorization: endpointItem.useHeaderAuthorization,
           httpMethod: endpointItem.requestType,
