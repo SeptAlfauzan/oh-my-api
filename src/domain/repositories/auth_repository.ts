@@ -7,4 +7,5 @@ export default abstract class AuthRepository {
   ): Promise<User>;
   abstract signin(email: string, password: string): Promise<User>;
   abstract oAuthFindOrCreateNewUser(firebaseUser: User): Promise<User>;
+  abstract resetPassword(email: string): Promise<void>;
 }

@@ -4,6 +4,14 @@ import { prisma } from "@/helper/prisma";
 import AuthRepository from "@/domain/repositories/auth_repository";
 
 export default class AuthRepositoryImpl implements AuthRepository {
+  async resetPassword(email: string): Promise<void> {
+    try {
+      const firebaseApp = FirebaseHelper.getInstance();
+      await firebaseApp.resetPasswordWithEmail(email);
+    } catch (error) {
+      throw error;
+    }
+  }
   async oAuthFindOrCreateNewUser(firebaseUser: User): Promise<User> {
     try {
       const username = firebaseUser.displayName ?? firebaseUser.email ?? "-";

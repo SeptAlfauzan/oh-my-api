@@ -9,6 +9,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   User,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 
 export default class FirebaseHelper {
@@ -82,6 +83,15 @@ export default class FirebaseHelper {
       );
       const user = result.user;
       return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async resetPasswordWithEmail(email: string): Promise<void> {
+    try {
+      const auth = getAuth();
+      await sendPasswordResetEmail(auth, email);
     } catch (error) {
       throw error;
     }

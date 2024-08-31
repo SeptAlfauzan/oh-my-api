@@ -97,7 +97,12 @@ export default function AuthForm({
           <FormControl isRequired>
             <PasswordInput setValue={setPassword} />
           </FormControl>
-          <Link textAlign={"right"} color={"blue"} fontSize={"xs"}>
+          <Link
+            textAlign={"right"}
+            color={"blue"}
+            fontSize={"xs"}
+            href="/forgot-password"
+          >
             Forgot password
           </Link>
           <Button type="submit" disabled={onSignin}>
