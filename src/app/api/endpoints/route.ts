@@ -70,12 +70,13 @@ export async function POST(req: Request, res: Response) {
         `${requestType}`.toLocaleUpperCase() as keyof typeof HttpMethod
       ];
     // console.log(jsonstr, workspaceId, desc, name);
-    // if (httpMethod != HttpMethod.GET)
-    //   console.log("useHeaderAuthorization", useHeaderAuthorization);
-    // return NextResponse.json(
-    //   { error: "Currently Oh-My-API only support for GET request method 😢" },
-    //   { status: 500 }
-    // );
+    if (httpMethod != HttpMethod.GET || HttpMethod.POST) {
+      console.log("useHeaderAuthorization", useHeaderAuthorization);
+    }
+    return NextResponse.json(
+      { error: "Currently Oh-My-API only support for GET request method 😢" },
+      { status: 500 }
+    );
 
     const endpointItem: EndpointItem = {
       id: uuid,
