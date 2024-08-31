@@ -25,10 +25,11 @@ import { Workspace } from "@prisma/client";
 import useSWR from "swr";
 
 export default function Page() {
-  const { data, error, isLoading } = useSWR<WorkspaceItem[], Error, any>(
-    "/api/workspaces",
-    Fetch.getData
-  );
+  const { data, error, isLoading, mutate } = useSWR<
+    WorkspaceItem[],
+    Error,
+    any
+  >("/api/workspaces", Fetch.getData);
 
   const toast = useToast();
   const router = useRouter();
@@ -50,6 +51,7 @@ export default function Page() {
         isClosable: true,
       });
       setWorkspaceName("");
+      mutate();
     } catch (error) {
       const result = (error as Error).message;
 

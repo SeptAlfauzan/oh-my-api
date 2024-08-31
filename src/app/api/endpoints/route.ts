@@ -69,14 +69,16 @@ export async function POST(req: Request, res: Response) {
       HttpMethod[
         `${requestType}`.toLocaleUpperCase() as keyof typeof HttpMethod
       ];
-    // console.log(jsonstr, workspaceId, desc, name);
-    if (httpMethod != HttpMethod.GET || HttpMethod.POST) {
-      console.log("useHeaderAuthorization", useHeaderAuthorization);
+
+    if (!isValidHttpMethod(httpMethod)) {
+      return NextResponse.json(
+        {
+          error:
+            "Currently Oh-My-API only support for GET and POST request method 😢",
+        },
+        { status: 500 }
+      );
     }
-    return NextResponse.json(
-      { error: "Currently Oh-My-API only support for GET request method 😢" },
-      { status: 500 }
-    );
 
     const endpointItem: EndpointItem = {
       id: uuid,
@@ -101,3 +103,9 @@ export async function POST(req: Request, res: Response) {
     return NextResponse.json({ error: result }, { status: 500 });
   }
 }
+
+const validHttpMethods: HttpMethod[] = [HttpMethod.GET, HttpMethod.POST];
+
+const isValidHttpMethod = (httpMethod: HttpMethod): boolean => {
+  return validHttpMethods.includes(httpMethod as keyof typeof HttpMethod);
+};
