@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
-    const endpointId = searchParams.get("endpointId");
+    const endpointId = searchParams.get("id");
 
     const result = await new EndpointsRepositoryImpl().deleteEndpoint(
       endpointId!

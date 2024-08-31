@@ -1,15 +1,28 @@
 import { EndpointItem } from "@/interfaces";
 import { copyToClipboard } from "@/utils/copy_clipboard";
-import { Box, Button, Link, ListItem, Text, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  IconButton,
+  Link,
+  ListItem,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import { HttpMethod } from "@prisma/client";
-import { MdCopyAll } from "react-icons/md";
+import { MdCopyAll, MdDelete } from "react-icons/md";
 
 type Props = {
   item: EndpointItem;
+  openDeleteDialog: (endpoint: EndpointItem) => void;
   url: string;
 };
 
-export default function WorkspaceEndpointItem({ item, url }: Props) {
+export default function WorkspaceEndpointItem({
+  item,
+  url,
+  openDeleteDialog,
+}: Props) {
   const toast = useToast();
 
   let typeRequest = "";
@@ -34,6 +47,34 @@ export default function WorkspaceEndpointItem({ item, url }: Props) {
     default:
       break;
   }
+
+  const handleCopyUrl = async () => {
+    {
+      try {
+        await copyToClipboard({
+          message: "-",
+          value: `${window.location.origin}/api/end-to-end?id=${item.id}`,
+        });
+        toast({
+          title: "End to end endpoint url is copied!.",
+          description: "Copy success!!",
+          status: "success",
+          position: "top-right",
+          duration: 2000,
+          isClosable: true,
+        });
+      } catch (error) {
+        toast({
+          title: "End to end endpoint url failed to copy!.",
+          description: "Copy fail!!",
+          status: "error",
+          position: "top-right",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    }
+  };
 
   return (
     <ListItem
@@ -64,34 +105,18 @@ export default function WorkspaceEndpointItem({ item, url }: Props) {
           </Box>
         </Box>
       </Link>
+      <IconButton
+        onClick={() => {
+          openDeleteDialog(item);
+        }}
+        background={"red"}
+        icon={<MdDelete color="white" />}
+        aria-label={""}
+      />
       <Button
         rightIcon={<MdCopyAll />}
         marginLeft={"auto"}
-        onClick={async (_) => {
-          try {
-            await copyToClipboard({
-              message: "-",
-              value: `${window.location.origin}/api/end-to-end?id=${item.id}`,
-            });
-            toast({
-              title: "End to end endpoint url is copied!.",
-              description: "Copy success!!",
-              status: "success",
-              position: "top-right",
-              duration: 2000,
-              isClosable: true,
-            });
-          } catch (error) {
-            toast({
-              title: "End to end endpoint url failed to copy!.",
-              description: "Copy fail!!",
-              status: "error",
-              position: "top-right",
-              duration: 2000,
-              isClosable: true,
-            });
-          }
-        }}
+        onClick={handleCopyUrl}
       >
         <Text display={{ base: "none", md: "block" }}>Copy URL</Text>
       </Button>

@@ -99,7 +99,15 @@ export default function Page() {
           </AlertDialogBody>
           <AlertDialogFooter gap={2}>
             <Button onClick={onClose}>Close</Button>
-            <Button backgroundColor="teal.200" onClick={createWorkSpace}>
+            <Button
+              backgroundColor="black"
+              color="white"
+              _hover={{
+                backgroundColor: "gray.100",
+                color: "black",
+              }}
+              onClick={createWorkSpace}
+            >
               Create Workspace
             </Button>
           </AlertDialogFooter>

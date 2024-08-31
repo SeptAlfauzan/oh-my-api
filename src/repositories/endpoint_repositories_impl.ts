@@ -93,13 +93,25 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
     try {
       const result = await prisma.$transaction(async (tx) => {
         // Delete related RequestBodyRules
-        await tx.requestBodyRule.deleteMany({
+        const requestBodyRules = await tx.requestBodyRule.findMany({
           where: { api_endpoint_id: endpointId },
         });
+        console.log("REQUEST BODY RULES", requestBodyRules.length);
+        if (requestBodyRules.length > 0) {
+          await tx.requestBodyRule.deleteMany({
+            where: { api_endpoint_id: endpointId },
+          });
+        }
         // Delete related ParameterEndpoints
-        await tx.parameterEndpoint.deleteMany({
+        const parameterEndpoints = await tx.parameterEndpoint.findMany({
           where: { api_endpoint_id: endpointId },
         });
+        console.log("REQUEST PA", requestBodyRules.length);
+        if (parameterEndpoints.length > 0) {
+          await tx.parameterEndpoint.deleteMany({
+            where: { api_endpoint_id: endpointId },
+          });
+        }
         // Finally, delete the ApiEndpoint
         const deletedApiEndpoint = await tx.apiEndpoint.delete({
           where: { id: endpointId },

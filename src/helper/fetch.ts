@@ -64,8 +64,25 @@ export default class Fetch {
         throw new Error(`Request error ${res.text}`);
       } else {
         const jsonResult = await res.json();
-        console.log(jsonResult);
         return jsonResult as T;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async delete<T>(url: string, option: any = {}): Promise<T> {
+    try {
+      const res = await fetch(url, {
+        method: "DELETE",
+        headers: option.headers,
+      });
+
+      if (!res.ok) {
+        throw new Error(`Request error ${res.text}`);
+      } else {
+        const jsonResult = await res.json();
+        return jsonResult.data as T;
       }
     } catch (error) {
       throw error;
