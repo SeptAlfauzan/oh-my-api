@@ -1,3 +1,4 @@
+import { HEADER_AUTHORIZATION_FIELD } from "@/constanta";
 import EndpointsRepository from "@/domain/repositories/endpoints_repository";
 import ImageKitHelper from "@/helper/imagekit_helper";
 import { prisma } from "@/helper/prisma";
@@ -139,48 +140,50 @@ export default class EndpointsRepositoryImpl implements EndpointsRepository {
     jsonResponseStr: string,
     requestBodyRules?: RequestBodyFieldRule[]
   ): Promise<ApiEndpoint> {
-    let resultImagekit: UploadResponse;
     try {
       const uuid = v4();
       const fileName = `${uuid}.json`;
-      const imageKitHelper = ImageKitHelper.getInstance();
 
-      const resultImagekit = await imageKitHelper.uploadJsonString(
-        jsonResponseStr,
-        fileName
-      );
-
-      endpointItem.jsonResponseUrl = resultImagekit.url;
-
-      const result = await prisma.apiEndpoint.create({
-        data: {
-          id: uuid,
-          name: endpointItem.name,
-          desc: endpointItem.desc,
-          workspace_id: endpointItem.workspaceId,
-          json_response_file_id: resultImagekit.fileId,
-          jsonResponseUrl: resultImagekit.url,
-          useAuthorization: endpointItem.useHeaderAuthorization,
-          httpMethod: endpointItem.requestType,
-        },
-      });
-
-      console.log("requestBodyRules", requestBodyRules);
-      if (requestBodyRules) {
-        const requestBodyRulesPrisma: RequestBodyRule[] = requestBodyRules.map(
-          (e) => {
-            return {
-              api_endpoint_id: uuid,
-              field_name: e.name,
-              field_type: e.dataType,
-              is_required: true,
-            } as RequestBodyRule;
-          }
+      const result = await prisma.$transaction(async (tx) => {
+        const imageKitHelper = ImageKitHelper.getInstance();
+        const resultImagekit = await imageKitHelper.uploadJsonString(
+          jsonResponseStr,
+          fileName
         );
-        await prisma.requestBodyRule.createMany({
-          data: requestBodyRulesPrisma,
+
+        endpointItem.jsonResponseUrl = resultImagekit.url;
+        const result = await tx.apiEndpoint.create({
+          data: {
+            id: uuid,
+            name: endpointItem.name,
+            desc: endpointItem.desc,
+            workspace_id: endpointItem.workspaceId,
+            json_response_file_id: resultImagekit.fileId,
+            jsonResponseUrl: resultImagekit.url,
+            useAuthorization: endpointItem.useHeaderAuthorization,
+            httpMethod: endpointItem.requestType,
+          },
         });
-      }
+
+        console.log("requestBodyRules", requestBodyRules);
+        if (requestBodyRules) {
+          const requestBodyRulesPrisma: RequestBodyRule[] =
+            requestBodyRules.map((e) => {
+              if (e.name == HEADER_AUTHORIZATION_FIELD)
+                throw `field name can't be ${HEADER_AUTHORIZATION_FIELD}!`;
+              return {
+                api_endpoint_id: uuid,
+                field_name: e.name,
+                field_type: e.dataType,
+                is_required: true,
+              } as RequestBodyRule;
+            });
+          await tx.requestBodyRule.createMany({
+            data: requestBodyRulesPrisma,
+          });
+        }
+        return result;
+      });
 
       return result;
     } catch (error) {

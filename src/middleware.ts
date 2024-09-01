@@ -4,6 +4,7 @@ import { JWT_TOKEN_KEY } from "./constanta";
 
 export async function middleware(request: NextRequest) {
   return await verifyToken(request);
+  return NextResponse.next();
 }
 
 async function verifyToken(request: NextRequest) {

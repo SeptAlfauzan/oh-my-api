@@ -1,4 +1,5 @@
 "use client";
+import { HEADER_AUTHORIZATION_FIELD } from "@/constanta";
 import Fetch from "@/helper/fetch";
 import { ApiEndpointOutput } from "@/interfaces";
 import DetailEndpointComponent from "@/templates/detail_api_endpoint";
@@ -19,7 +20,7 @@ export default function Page({
     Fetch.getData
   );
   const [editorData, setEditorData] = useState<string | null | undefined>(null);
-  const [onLoadingExecute, setonLoadingExecute] = useState(false);
+  const [status, setStatus] = useState(200);
 
   async function handleCopyClipBoard() {
     try {
@@ -54,7 +55,7 @@ export default function Page({
         value: `${window.location.origin}/share/${params.id}`,
       });
       toast({
-        title: "Share page of this share url is copied!.",
+        title: "Share page url of this endpoint is successfully copied!.",
         description: "Copy success!!",
         status: "success",
         position: "top-right",
@@ -63,7 +64,7 @@ export default function Page({
       });
     } catch (error) {
       toast({
-        title: "EShare page of this share url failed to copy!.",
+        title: "Share page url of this endpoint is failed to copy!.",
         description: "Copy fail!!",
         status: "error",
         position: "top-right",
@@ -73,31 +74,51 @@ export default function Page({
     }
   }
 
-  async function handleExecuteEndpoint() {
-    setonLoadingExecute(true);
+  async function handleExecuteEndpoint(formValue: any) {
     try {
       let result;
       switch (data?.httpMethod) {
         case HttpMethod.GET:
           result = await Fetch.getDataRaw(
-            `${window.location.origin}/api/end-to-end?id=${params.id}`
+            `${window.location.origin}/api/end-to-end?id=${params.id}`,
+            {
+              headers: new Headers({
+                Authorization: formValue[HEADER_AUTHORIZATION_FIELD],
+              }),
+            }
+          );
+          break;
+        case HttpMethod.POST:
+          result = await Fetch.postDataRaw(
+            `${window.location.origin}/api/end-to-end?id=${params.id}`,
+            formValue,
+            {
+              headers: new Headers({
+                Authorization: formValue[HEADER_AUTHORIZATION_FIELD],
+              }),
+            }
           );
           break;
         default:
           throw new Error("Other HTTP method is not implemented yet :(");
       }
-      if (result) setEditorData(JSON.stringify(result));
+      console.log(result);
+      if (result) setEditorData(JSON.stringify(await result.json()));
+      setStatus(result.status);
+      if (!result.ok) {
+        throw result.statusText;
+      }
     } catch (error) {
+      console.log(error);
+
       toast({
         title: "Executing request failed.",
-        description: "Request fail!",
+        description: `Request fail! Error: ${error}`,
         status: "error",
         position: "top-right",
         duration: 2000,
         isClosable: true,
       });
-    } finally {
-      setonLoadingExecute(false);
     }
   }
 
@@ -117,9 +138,9 @@ export default function Page({
       </Button>
       <DetailEndpointComponent
         id={params.id}
+        status={status}
         data={data}
         editorData={editorData}
-        onLoadingExecute={onLoadingExecute}
         handleCopyClipBoard={handleCopyClipBoard}
         handleExecuteEndpoint={handleExecuteEndpoint}
       />

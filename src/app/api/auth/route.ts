@@ -18,6 +18,7 @@ export async function POST(req: Request, res: Response) {
 
     return NextResponse.json({ data: token });
   } catch (e) {
+    console.log(e);
     const result = (e as Error).message;
 
     return NextResponse.json({ error: result }, { status: 500 });

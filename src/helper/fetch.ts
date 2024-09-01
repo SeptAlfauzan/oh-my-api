@@ -53,19 +53,31 @@ export default class Fetch {
     }
   }
 
-  static async getDataRaw<T>(url: string, option: any = {}): Promise<T> {
+  static async getDataRaw(url: string, option: any = {}): Promise<Response> {
     try {
       const res = await fetch(url, {
         method: "GET",
         headers: option.headers,
       });
 
-      if (!res.ok) {
-        throw new Error(`Request error ${res.text}`);
-      } else {
-        const jsonResult = await res.json();
-        return jsonResult as T;
-      }
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async postDataRaw(
+    url: string,
+    data: any,
+    option: any = {}
+  ): Promise<Response> {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: option.headers,
+        body: JSON.stringify(data),
+      });
+
+      return res;
     } catch (error) {
       throw error;
     }

@@ -13,7 +13,25 @@ export async function GET(req: NextRequest) {
       HttpMethod.GET
     );
 
-    checkUseHeaderAuthorization(result, req);
+    if (result.useAuthorization) {
+      const tokenAuthorization = req.headers
+        .get("Authorization")
+        ?.replace("Bearer ", "");
+      if (!tokenAuthorization) {
+        return NextResponse.json(
+          { statusText: "Must be use header authorization" },
+          { status: 401 }
+        );
+      }
+      if (!req.headers.get("Authorization")?.includes("Bearer"))
+        return NextResponse.json(
+          { statusText: "Token authorization is in invalid format!" },
+          {
+            status: 401,
+            statusText: "Token authorization is in invalid format!",
+          }
+        );
+    }
 
     const json = await (await fetch(result.jsonResponseUrl)).json();
     return NextResponse.json(json);
@@ -32,7 +50,23 @@ export async function POST(req: NextRequest) {
       endpointId,
       HttpMethod.POST
     );
-    checkUseHeaderAuthorization(result, req);
+
+    if (result.useAuthorization) {
+      const tokenAuthorization = req.headers
+        .get("Authorization")
+        ?.replace("Bearer ", "");
+      if (!tokenAuthorization) {
+        return NextResponse.json(
+          { statusText: "Must be use header authorization" },
+          { status: 401 }
+        );
+      }
+      if (!req.headers.get("Authorization")?.includes("Bearer"))
+        return NextResponse.json(
+          { statusText: "Token authorization is in invalid format!" },
+          { status: 401 }
+        );
+    }
 
     const requestFields = result.requestBodyRules;
     const request = await req.json();
@@ -82,8 +116,13 @@ export async function POST(req: NextRequest) {
     const json = await (await fetch(result.jsonResponseUrl)).json();
     return NextResponse.json(json);
   } catch (error) {
-    const result = (error as Error).message;
-    return NextResponse.json({ error: result }, { status: 500 });
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { statusText: error.message },
+        { status: 500, statusText: error.message }
+      );
+    }
+    return NextResponse.json({ statusText: error }, { status: 500 });
   }
 }
 
@@ -94,13 +133,21 @@ function isBoolean(value?: string | number | boolean | null) {
   );
 }
 
-function checkUseHeaderAuthorization(api: ApiEndpointOutput, req: NextRequest) {
+function checkUseHeaderAuthorization(
+  api: ApiEndpointOutput,
+  req: NextRequest
+): NextResponse | undefined {
   console.log("use header authorization", api.useAuthorization);
   if (api.useAuthorization) {
     const tokenAuthorization = req.headers
       .get("Authorization")
       ?.replace("Bearer ", "");
-    if (!tokenAuthorization)
-      throw new Error("Must be pass header authorization!");
+    if (!tokenAuthorization) {
+      console.log("not authorize");
+      return NextResponse.json(
+        { statusText: "Must be use header authorization" },
+        { status: 401 }
+      );
+    }
   }
 }

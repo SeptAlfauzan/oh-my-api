@@ -1,10 +1,12 @@
 "use client";
+import { HEADER_AUTHORIZATION_FIELD } from "@/constanta";
 import Fetch from "@/helper/fetch";
 import { ApiEndpointOutput } from "@/interfaces";
 import DetailEndpointComponent from "@/templates/detail_api_endpoint";
 import { copyToClipboard } from "@/utils/copy_clipboard";
 import { Box, Heading, Text, useToast } from "@chakra-ui/react";
 import { HttpMethod } from "@prisma/client";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
@@ -12,11 +14,11 @@ import useSWR from "swr";
 export default function Page({ params }: { params: { id: string } }) {
   const toast = useToast();
   const { data, error, isLoading } = useSWR<ApiEndpointOutput, Error, any>(
-    `/api/endpoints?endpointId=${params.id}`,
+    `/api/share?endpointId=${params.id}`,
     Fetch.getData
   );
   const [editorData, setEditorData] = useState<string | null | undefined>(null);
-  const [onLoadingExecute, setonLoadingExecute] = useState(false);
+  const [status, setStatus] = useState(200);
 
   async function handleCopyClipBoard() {
     try {
@@ -44,31 +46,51 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   }
 
-  async function handleExecuteEndpoint() {
-    setonLoadingExecute(true);
+  async function handleExecuteEndpoint(formValue: any) {
     try {
       let result;
       switch (data?.httpMethod) {
         case HttpMethod.GET:
           result = await Fetch.getDataRaw(
-            `${window.location.origin}/api/end-to-end?id=${params.id}`
+            `${window.location.origin}/api/end-to-end?id=${params.id}`,
+            {
+              headers: new Headers({
+                Authorization: formValue[HEADER_AUTHORIZATION_FIELD],
+              }),
+            }
+          );
+          break;
+        case HttpMethod.POST:
+          result = await Fetch.postDataRaw(
+            `${window.location.origin}/api/end-to-end?id=${params.id}`,
+            formValue,
+            {
+              headers: new Headers({
+                Authorization: formValue[HEADER_AUTHORIZATION_FIELD],
+              }),
+            }
           );
           break;
         default:
           throw new Error("Other HTTP method is not implemented yet :(");
       }
-      if (result) setEditorData(JSON.stringify(result));
+      console.log(result);
+      if (!result.ok) {
+        throw result.statusText;
+      }
+      if (result) setEditorData(JSON.stringify(await result.json()));
+      setStatus(result.status);
     } catch (error) {
+      console.log(error);
+
       toast({
         title: "Executing request failed.",
-        description: "Request fail!",
+        description: `Request fail! Error: ${error}`,
         status: "error",
         position: "top-right",
         duration: 2000,
         isClosable: true,
       });
-    } finally {
-      setonLoadingExecute(false);
     }
   }
 
@@ -81,10 +103,10 @@ export default function Page({ params }: { params: { id: string } }) {
         <Heading>API: {data?.name}</Heading>
         <Text mb={12}>Desc: {data?.desc}</Text>
         <DetailEndpointComponent
+          status={status}
           id={params.id}
           data={data}
           editorData={editorData}
-          onLoadingExecute={onLoadingExecute}
           handleCopyClipBoard={handleCopyClipBoard}
           handleExecuteEndpoint={handleExecuteEndpoint}
         />
