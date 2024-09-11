@@ -81,4 +81,5 @@ enum FieldType {
   DOUBLE
   TEXT
   BOOLEAN
+  FILE
 }

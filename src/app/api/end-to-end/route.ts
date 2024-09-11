@@ -71,11 +71,9 @@ export async function POST(req: NextRequest) {
     const requestFields = result.requestBodyRules;
     const request = await req.json();
 
-    console.log(requestFields);
-
     requestFields.forEach((requestField) => {
-      console.log(request[requestField.field_name]);
       const requestBodyField = request[requestField.field_name];
+
       if (requestBodyField == undefined)
         throw new Error(`Field '${requestField.field_name}' is required!`);
       switch (requestField.field_type) {
@@ -86,7 +84,6 @@ export async function POST(req: NextRequest) {
             );
           break;
         case FieldType.INTEGER:
-          console.log("integer");
           if (isNaN(Number(requestBodyField)))
             throw new Error(
               `Field '${requestField.field_name}' value must be a integer`
