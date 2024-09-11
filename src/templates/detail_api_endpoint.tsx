@@ -26,7 +26,7 @@ type Props = {
   editorData: string | null | undefined;
   status: number;
   handleCopyClipBoard: () => Promise<void>;
-  handleExecuteEndpoint: (data: any) => Promise<void>;
+  handleExecuteEndpoint: (data: Record<string, any>) => Promise<void>;
 };
 
 const DetailEndpointComponent: React.FC<Props> = ({
@@ -63,7 +63,7 @@ const DetailEndpointComponent: React.FC<Props> = ({
     <Formik
       initialValues={initialValues}
       onSubmit={async (values, actions) => {
-        console.log(JSON.stringify(values, null, 2));
+        console.log("formik", JSON.stringify(values, null, 2));
         await handleExecuteEndpoint(values);
         actions.setSubmitting(false);
       }}
@@ -93,7 +93,7 @@ const DetailEndpointComponent: React.FC<Props> = ({
 
               {data?.requestBodyRules.length != undefined &&
               data?.requestBodyRules.length > 0 ? (
-                <Text>Request body</Text>
+                <Text my={4}>Request body</Text>
               ) : null}
               <SimpleGrid columns={{ md: 4, sm: 2, base: 1 }} spacing={4}>
                 {data?.requestBodyRules.map((rule, index) => (
@@ -107,8 +107,16 @@ const DetailEndpointComponent: React.FC<Props> = ({
                           )
                         }
                       >
-                        <FormLabel htmlFor={rule.field_name}>
-                          {rule.field_name}
+                        <FormLabel
+                          htmlFor={rule.field_name}
+                          display="flex"
+                          alignItems={"center"}
+                          gap={2}
+                        >
+                          {rule.field_name}{" "}
+                          <Text color="gray.400" fontSize={12}>
+                            [input type: {rule.field_type}]
+                          </Text>
                         </FormLabel>
                         {rule.field_type === FieldType.BOOLEAN ? (
                           <Checkbox {...field} id={rule.field_name}>
@@ -182,6 +190,8 @@ const inputTypeFromEndpointFieldType = (fieldType: FieldType): string => {
       return "number";
     case FieldType.TEXT:
       return "text";
+    case FieldType.FILE:
+      return "file";
     default:
       return "text";
   }

@@ -1,11 +1,13 @@
 "use client";
+import { useHandlerExecutionAPI } from "@/app/hooks/use_handler_execution_api";
 import { HEADER_AUTHORIZATION_FIELD } from "@/constanta";
 import Fetch from "@/helper/fetch";
 import { ApiEndpointOutput } from "@/interfaces";
 import DetailEndpointComponent from "@/templates/detail_api_endpoint";
 import { copyToClipboard } from "@/utils/copy_clipboard";
+import { appendRecordToFormData } from "@/utils/form_data";
 import { Box, Button, Text, useToast } from "@chakra-ui/react";
-import { HttpMethod } from "@prisma/client";
+import { FieldType, HttpMethod } from "@prisma/client";
 import { useState } from "react";
 import useSWR from "swr";
 
@@ -14,13 +16,12 @@ export default function Page({
 }: {
   params: { slug: string; id: string };
 }) {
+  const [editorData, status, performExecution] = useHandlerExecutionAPI();
   const toast = useToast();
   const { data, error, isLoading } = useSWR<ApiEndpointOutput, Error, any>(
     `/api/endpoints?endpointId=${params.id}`,
     Fetch.getData
   );
-  const [editorData, setEditorData] = useState<string | null | undefined>(null);
-  const [status, setStatus] = useState(200);
 
   async function handleCopyClipBoard() {
     try {
@@ -74,43 +75,18 @@ export default function Page({
     }
   }
 
-  async function handleExecuteEndpoint(formValue: any) {
+  async function handleExecuteEndpoint(formValue: Record<string, any>) {
     try {
-      let result;
-      switch (data?.httpMethod) {
-        case HttpMethod.GET:
-          result = await Fetch.getDataRaw(
-            `${window.location.origin}/api/end-to-end?id=${params.id}`,
-            {
-              headers: new Headers({
-                Authorization: formValue[HEADER_AUTHORIZATION_FIELD],
-              }),
-            }
-          );
-          break;
-        case HttpMethod.POST:
-          result = await Fetch.postDataRaw(
-            `${window.location.origin}/api/end-to-end?id=${params.id}`,
-            formValue,
-            {
-              headers: new Headers({
-                Authorization: formValue[HEADER_AUTHORIZATION_FIELD],
-              }),
-            }
-          );
-          break;
-        default:
-          throw new Error("Other HTTP method is not implemented yet :(");
-      }
-      console.log(result);
-      if (result) setEditorData(JSON.stringify(await result.json()));
-      setStatus(result.status);
-      if (!result.ok) {
-        throw result.statusText;
-      }
+      await performExecution(params.id, data, formValue);
+      toast({
+        title: "Executing request sucess.",
+        description: `Check the result below}`,
+        status: "success",
+        position: "top-right",
+        duration: 2000,
+        isClosable: true,
+      });
     } catch (error) {
-      console.log(error);
-
       toast({
         title: "Executing request failed.",
         description: `Request fail! Error: ${error}`,

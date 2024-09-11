@@ -68,13 +68,14 @@ export default class Fetch {
   static async postDataRaw(
     url: string,
     data: any,
+    formData: any = null,
     option: any = {}
   ): Promise<Response> {
     try {
       const res = await fetch(url, {
         method: "POST",
         headers: option.headers,
-        body: JSON.stringify(data),
+        body: formData ?? JSON.stringify(data),
       });
 
       return res;

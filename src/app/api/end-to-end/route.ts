@@ -69,10 +69,22 @@ export async function POST(req: NextRequest) {
     }
 
     const requestFields = result.requestBodyRules;
-    const request = await req.json();
+    console.log("=====");
+    console.log(requestFields);
+    const containTypeFile =
+      requestFields.filter((item) => item.field_type == FieldType.FILE).length >
+      0;
+
+    const request: FormData | any = containTypeFile
+      ? await req.formData()
+      : await req.json();
 
     requestFields.forEach((requestField) => {
-      const requestBodyField = request[requestField.field_name];
+      const requestBodyField = containTypeFile
+        ? request.get(requestField.field_name)
+        : request[requestField.field_name];
+
+      console.log(request.get(requestField.field_name));
 
       if (requestBodyField == undefined)
         throw new Error(`Field '${requestField.field_name}' is required!`);
@@ -93,6 +105,12 @@ export async function POST(req: NextRequest) {
           if (isNaN(Number(requestBodyField)))
             throw new Error(
               `Field '${requestField.field_name}' value must be a double`
+            );
+          break;
+        case FieldType.FILE:
+          if ((requestBodyField as File).name == "")
+            throw new Error(
+              `Field '${requestField.field_name}' value must be a file`
             );
           break;
         case FieldType.TEXT:
