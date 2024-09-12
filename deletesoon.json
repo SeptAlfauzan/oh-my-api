@@ -1,0 +1,32 @@
+{
+  "data": {
+    "student_id": "asdlasdjasd",
+    "reports": [
+      {
+        "id": "diagnostic-test-report",
+        "title": "Diagnostic Test",
+        "finished_progress": 75
+      },
+      {
+        "id": "introduction-proof-report",
+        "title": "Introduction to Proof",
+        "finished_progress": 100
+      },
+      {
+        "id": "geometric-proof-report",
+        "title": "Geometry Proof Format",
+        "finished_progress": 25
+      },
+      {
+        "id": "understanding-proof-report",
+        "title": "Understanding of Proof Structure",
+        "finished_progress": 75
+      },
+      {
+        "id": "proof-competence-report",
+        "title": "Proof Competence Test",
+        "finished_progress": 75
+      }
+    ]
+  }
+}

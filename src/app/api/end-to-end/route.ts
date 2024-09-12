@@ -84,8 +84,6 @@ export async function POST(req: NextRequest) {
         ? request.get(requestField.field_name)
         : request[requestField.field_name];
 
-      console.log(request.get(requestField.field_name));
-
       if (requestBodyField == undefined)
         throw new Error(`Field '${requestField.field_name}' is required!`);
       switch (requestField.field_type) {
@@ -131,6 +129,7 @@ export async function POST(req: NextRequest) {
     const json = await (await fetch(result.jsonResponseUrl)).json();
     return NextResponse.json(json);
   } catch (error) {
+    console.log("===== ERROR =====", error);
     if (error instanceof Error) {
       return NextResponse.json(
         { statusText: error.message },
