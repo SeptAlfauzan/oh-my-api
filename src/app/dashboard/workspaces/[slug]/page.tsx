@@ -14,16 +14,28 @@ import {
   AlertDialogFooter,
   useDisclosure,
   useToast,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  IconButton,
+  filter,
 } from "@chakra-ui/react";
 import WorkspaceEndpointItem from "./widgets/workspace_endpoint_item";
 import useSWR from "swr";
 import Fetch from "@/helper/fetch";
 import Dialog from "@/widgets/dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { LuUser } from "react-icons/lu";
+import { CloseIcon, PhoneIcon, SearchIcon } from "@chakra-ui/icons";
+import { HttpMethod } from "@prisma/client";
+import { MdCheck } from "react-icons/md";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
+  const [filterMethodType, setFilterMethodType] = useState<HttpMethod[]>([]);
+
   const toast = useToast();
 
   const [endpointToDelete, setEndpointToDelete] = useState<EndpointItem | null>(
@@ -33,11 +45,33 @@ export default function Page({ params }: { params: { slug: string } }) {
     `/api/endpoints?workspaceId=${params.slug}`,
     Fetch.getData
   );
+  const [filteredItems, setFilteredItems] = useState<EndpointItem[]>([]);
+
+  let items: EndpointItem[] | undefined = data ?? [];
+
+  useEffect(() => {
+    if (data) {
+      const filtered =
+        search || filterMethodType.length > 0
+          ? data.filter((item) => {
+              const findExact = item.name
+                .toLowerCase()
+                .includes(search.toLowerCase());
+
+              if (filterMethodType.length > 0)
+                return findExact && filterMethodType.includes(item.requestType);
+
+              return findExact;
+            })
+          : data;
+
+      setFilteredItems(filtered);
+    }
+  }, [search, data, filterMethodType]);
 
   if (error) return <Text>Failed to load {error.message}</Text>;
   if (isLoading) return <Text>Loading...</Text>;
 
-  const items = data ?? [];
   const handleTriggerDeleteDialog = (endpoint: EndpointItem) => {
     setEndpointToDelete(endpoint);
     onOpen();
@@ -72,11 +106,66 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <Box>
+      <Box
+        display={"flex"}
+        flexDir={{ lg: "row", base: "column-reverse" }}
+        mb={2}
+      >
+        <Box display={"flex"} flex={1} flexDir={"column"}>
+          <Text>Filter by</Text>
+          <Box display={"flex"} flex={1} gap={2}>
+            {Object.values(HttpMethod).map((httpMethod) => (
+              <Button
+                key={httpMethod}
+                onClick={() => {
+                  const index = filterMethodType.indexOf(httpMethod);
+                  const filtered = [...filterMethodType];
+                  filterMethodType.includes(httpMethod)
+                    ? filtered.splice(index, 1)
+                    : filtered.push(httpMethod);
+                  setFilterMethodType(filtered);
+                  console.log(filterMethodType);
+                }}
+                rightIcon={
+                  filterMethodType.includes(httpMethod) ? <MdCheck /> : <Box />
+                }
+                colorScheme="blue"
+                bg={filterMethodType.includes(httpMethod) ? "blue.50" : "white"}
+                variant="outline"
+                rounded={"xl"}
+              >
+                {httpMethod}
+              </Button>
+            ))}
+          </Box>
+        </Box>
+        <InputGroup ml={"auto"} width={{ lg: "55%", base: "100%" }} mb={4}>
+          <InputRightElement>
+            {search ? (
+              <CloseIcon
+                _hover={{
+                  cursor: "pointer",
+                }}
+                onClick={() => setSearch("")}
+              />
+            ) : (
+              <SearchIcon color="black" />
+            )}
+          </InputRightElement>
+          <Input
+            bg={"white"}
+            value={search}
+            placeholder="Search endpoint name"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </InputGroup>
+      </Box>
+
       <List spacing={3} mb={12}>
-        {items.length == 0 ? (
-          <Text>No API endpoint has created yet</Text>
+        {filteredItems.length == 0 ? (
+          <Text>No API endpoint :(</Text>
         ) : (
-          items.map((item, i) => (
+          filteredItems.map((item, i) => (
             <WorkspaceEndpointItem
               key={i}
               item={item}
