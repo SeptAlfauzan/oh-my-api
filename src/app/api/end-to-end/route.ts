@@ -69,8 +69,7 @@ export async function POST(req: NextRequest) {
     }
 
     const requestFields = result.requestBodyRules;
-    console.log("=====");
-    console.log(requestFields);
+
     const containTypeFile =
       requestFields.filter((item) => item.field_type == FieldType.FILE).length >
       0;
@@ -151,13 +150,11 @@ function checkUseHeaderAuthorization(
   api: ApiEndpointOutput,
   req: NextRequest
 ): NextResponse | undefined {
-  console.log("use header authorization", api.useAuthorization);
   if (api.useAuthorization) {
     const tokenAuthorization = req.headers
       .get("Authorization")
       ?.replace("Bearer ", "");
     if (!tokenAuthorization) {
-      console.log("not authorize");
       return NextResponse.json(
         { statusText: "Must be use header authorization" },
         { status: 401 }
