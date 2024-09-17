@@ -43,12 +43,72 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    return await handleApiWithRequestBody(req);
+  } catch (error) {
+    console.log("===== ERROR =====", error);
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { statusText: error.message },
+        { status: 500, statusText: error.message }
+      );
+    }
+    return NextResponse.json({ statusText: error }, { status: 500 });
+  }
+}
+export async function PUT(req: NextRequest) {
+  try{
+    console.log(req);
+    return await handleApiWithRequestBody(req);
+  } catch (error) {
+    console.log("===== ERROR =====", error);
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { statusText: error.message },
+        { status: 500, statusText: error.message }
+      );
+    }
+    return NextResponse.json({ statusText: error }, { status: 500 });
+  }
+}
+export async function PATCH(req: NextRequest) {
+  try{
+    console.log(req);
+    return await handleApiWithRequestBody(req);
+  } catch (error) {
+    console.log("===== ERROR =====", error);
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { statusText: error.message },
+        { status: 500, statusText: error.message }
+      );
+    }
+    return NextResponse.json({ statusText: error }, { status: 500 });
+  }
+}
+
+async function handleApiWithRequestBody(req: NextRequest){
     const searchParams = req.nextUrl.searchParams;
     const endpointId = searchParams.get("id");
     if (endpointId == null) throw Error("Query id must be filled!");
+    
+    let requestMethod;
+    switch (req.method) {
+      case 'POST':
+        requestMethod = HttpMethod.POST;
+        break;
+      case 'PUT':
+        requestMethod = HttpMethod.PUT;
+        break;
+      case 'PATCH':
+        requestMethod = HttpMethod.PATCH;
+        break;
+      default:
+        throw Error("Invalid http request method!");
+    }
+
     const result = await new EndpointsRepositoryImpl().getEndpointsJsonResponse(
       endpointId,
-      HttpMethod.POST
+      requestMethod
     );
 
     if (result.useAuthorization) {
@@ -127,17 +187,8 @@ export async function POST(req: NextRequest) {
     });
     const json = await (await fetch(result.jsonResponseUrl)).json();
     return NextResponse.json(json);
-  } catch (error) {
-    console.log("===== ERROR =====", error);
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { statusText: error.message },
-        { status: 500, statusText: error.message }
-      );
-    }
-    return NextResponse.json({ statusText: error }, { status: 500 });
-  }
 }
+
 
 function isBoolean(value?: string | number | boolean | null) {
   value = value?.toString().toLowerCase();

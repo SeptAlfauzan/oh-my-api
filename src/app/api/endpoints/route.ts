@@ -70,15 +70,14 @@ export async function POST(req: Request, res: Response) {
         `${requestType}`.toLocaleUpperCase() as keyof typeof HttpMethod
       ];
 
-    if (!isValidHttpMethod(httpMethod)) {
-      return NextResponse.json(
-        {
-          error:
-            "Currently Oh-My-API only support for GET and POST request method 😢",
-        },
-        { status: 500 }
-      );
-    }
+//    if (!isValidHttpMethod(httpMethod)) {
+//      return NextResponse.json(
+//        {
+//          error:           "Currently Oh-My-API only support for GET and POST request method 😢",
+//        },
+//        { status: 500 }
+//      );
+//    }
 
     const endpointItem: EndpointItem = {
       id: uuid,
@@ -104,7 +103,7 @@ export async function POST(req: Request, res: Response) {
   }
 }
 
-const validHttpMethods: HttpMethod[] = [HttpMethod.GET, HttpMethod.POST];
+const validHttpMethods: HttpMethod[] = [HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE];
 
 const isValidHttpMethod = (httpMethod: HttpMethod): boolean => {
   return validHttpMethods.includes(httpMethod as keyof typeof HttpMethod);
