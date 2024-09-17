@@ -10,7 +10,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { HttpMethod } from "@prisma/client";
-import { MdCopyAll, MdDelete } from "react-icons/md";
+import { MdCopyAll, MdDelete, MdShare } from "react-icons/md";
 
 type Props = {
   item: EndpointItem;
@@ -75,12 +75,40 @@ export default function WorkspaceEndpointItem({
       }
     }
   };
+  const handleCopyShareUrl = async () => {
+    {
+      try {
+        await copyToClipboard({
+          message: "-",
+          value: `${window.location.origin}/api/share/${item.id}`,
+        });
+        toast({
+          title: "Share url from en to end endpoint is copied!.",
+          description: "Copy success!!",
+          status: "success",
+          position: "top-right",
+          duration: 2000,
+          isClosable: true,
+        });
+      } catch (error) {
+        toast({
+          title: "Share url from en to end endpoint is failed to copy!.",
+          description: "Copy fail!!",
+          status: "error",
+          position: "top-right",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    }
+  };
+
 
   return (
     <ListItem
       display={"flex"}
       alignItems={"center"}
-      gap={4}
+      gap={2}
       background={"white"}
       padding={2}
       borderRadius={8}
@@ -109,8 +137,14 @@ export default function WorkspaceEndpointItem({
         onClick={() => {
           openDeleteDialog(item);
         }}
-        background={"red"}
-        icon={<MdDelete color="white" />}
+        icon={<MdDelete color="red" />}
+        aria-label={""}
+      />
+      <IconButton
+        onClick={() => {
+          handleCopyShareUrl();
+        }}
+        icon={<MdShare color="black" />}
         aria-label={""}
       />
       <Button
@@ -118,7 +152,7 @@ export default function WorkspaceEndpointItem({
         marginLeft={"auto"}
         onClick={handleCopyUrl}
       >
-        <Text display={{ base: "none", md: "block" }}>Copy URL</Text>
+        <Text display={{ base: "none", md: "block" }} fontSize="8">Copy API URL</Text>
       </Button>
     </ListItem>
   );

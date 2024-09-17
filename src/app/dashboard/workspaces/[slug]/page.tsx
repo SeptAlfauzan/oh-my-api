@@ -47,7 +47,6 @@ export default function Page({ params }: { params: { slug: string } }) {
   );
   const [filteredItems, setFilteredItems] = useState<EndpointItem[]>([]);
 
-  let items: EndpointItem[] | undefined = data ?? [];
 
   useEffect(() => {
     if (data) {
@@ -106,12 +105,28 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <Box>
-      <Box
-        display={"flex"}
-        flexDir={{ lg: "row", base: "column-reverse" }}
-        mb={2}
-      >
-        <Box display={"flex"} flex={1} flexDir={"column"}>
+        <Box display={"flex"} flex={1} flexDir={"column"} mb="8">
+          <InputGroup width={{ lg: "55%", base: "100%" }} mb={4}>
+            <InputRightElement>
+              {search ? (
+                <CloseIcon
+                  _hover={{
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setSearch("")}
+                />
+              ) : (
+                <SearchIcon color="black" />
+              )}
+            </InputRightElement>
+            <Input
+              bg={"white"}
+              value={search}
+              placeholder="Search endpoint name"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </InputGroup>
+ 
           <Text>Filter by</Text>
           <Box display={"flex"} flex={1} gap={2}>
             {Object.values(HttpMethod).map((httpMethod) => (
@@ -139,27 +154,6 @@ export default function Page({ params }: { params: { slug: string } }) {
             ))}
           </Box>
         </Box>
-        <InputGroup ml={"auto"} width={{ lg: "55%", base: "100%" }} mb={4}>
-          <InputRightElement>
-            {search ? (
-              <CloseIcon
-                _hover={{
-                  cursor: "pointer",
-                }}
-                onClick={() => setSearch("")}
-              />
-            ) : (
-              <SearchIcon color="black" />
-            )}
-          </InputRightElement>
-          <Input
-            bg={"white"}
-            value={search}
-            placeholder="Search endpoint name"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </InputGroup>
-      </Box>
 
       <List spacing={3} mb={12}>
         {filteredItems.length == 0 ? (
@@ -186,10 +180,10 @@ export default function Page({ params }: { params: { slug: string } }) {
         <Button
           color={"white"}
           _hover={{
-            textColor: "black",
+            textColor: "bgray.700",
             background: "gray.200",
           }}
-          background={"gray.700"}
+          background={"black"}
           position={"fixed"}
           zIndex={2}
           bottom={4}
