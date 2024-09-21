@@ -21,6 +21,9 @@ export const useHandlerExecutionAPI = () => {
           Authorization: formValue[HEADER_AUTHORIZATION_FIELD],
         });
 
+        let haveFileTypeReqBody: boolean = false;
+        let body: FormData | string;
+
         switch (data?.httpMethod) {
           case HttpMethod.GET:
             result = await fetch(
@@ -32,12 +35,11 @@ export const useHandlerExecutionAPI = () => {
             );
             break;
           case HttpMethod.POST:
-            const haveFileTypeReqBody =
+            haveFileTypeReqBody =
               data?.requestBodyRules.some(
                 (reqBody) => reqBody.field_type === FieldType.FILE
               ) ?? false;
 
-            let body: FormData | string;
             if (haveFileTypeReqBody) {
               body = appendRecordToFormData(data, formValue);
             } else {
@@ -51,6 +53,59 @@ export const useHandlerExecutionAPI = () => {
                 method: "POST",
                 headers,
                 body,
+              }
+            );
+            break;
+          case HttpMethod.PUT:
+            haveFileTypeReqBody =
+              data?.requestBodyRules.some(
+                (reqBody) => reqBody.field_type === FieldType.FILE
+              ) ?? false;
+
+            if (haveFileTypeReqBody) {
+              body = appendRecordToFormData(data, formValue);
+            } else {
+              body = JSON.stringify(formValue);
+              headers.append("Content-Type", "application/json");
+            }
+
+            result = await fetch(
+              `${window.location.origin}/api/end-to-end?id=${id}`,
+              {
+                method: "PUT",
+                headers,
+                body,
+              }
+            );
+            break;
+          case HttpMethod.PATCH:
+            haveFileTypeReqBody =
+              data?.requestBodyRules.some(
+                (reqBody) => reqBody.field_type === FieldType.FILE
+              ) ?? false;
+
+            if (haveFileTypeReqBody) {
+              body = appendRecordToFormData(data, formValue);
+            } else {
+              body = JSON.stringify(formValue);
+              headers.append("Content-Type", "application/json");
+            }
+
+            result = await fetch(
+              `${window.location.origin}/api/end-to-end?id=${id}`,
+              {
+                method: "PATCH",
+                headers,
+                body,
+              }
+            );
+            break;
+          case HttpMethod.DELETE:
+            result = await fetch(
+              `${window.location.origin}/api/end-to-end?id=${id}`,
+              {
+                method: "DELETE",
+                headers,
               }
             );
             break;
