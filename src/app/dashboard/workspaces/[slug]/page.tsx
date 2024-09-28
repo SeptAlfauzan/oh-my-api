@@ -1,34 +1,30 @@
 "use client";
+import Fetch from "@/helper/fetch";
 import { EndpointItem } from "@/interfaces";
+import Dialog from "@/widgets/dialog";
+import { CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import {
+  AlertDialogBody,
+  AlertDialogCloseButton,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
   Box,
   Button,
-  List,
-  Link,
-  Text,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogCloseButton,
-  AlertDialogBody,
   Input,
-  AlertDialogFooter,
+  InputGroup,
+  InputRightElement,
+  List,
+  Text,
   useDisclosure,
   useToast,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
-  IconButton,
-  filter,
 } from "@chakra-ui/react";
-import WorkspaceEndpointItem from "./widgets/workspace_endpoint_item";
-import useSWR from "swr";
-import Fetch from "@/helper/fetch";
-import Dialog from "@/widgets/dialog";
-import { useEffect, useState } from "react";
-import { LuUser } from "react-icons/lu";
-import { CloseIcon, PhoneIcon, SearchIcon } from "@chakra-ui/icons";
 import { HttpMethod } from "@prisma/client";
+import { useEffect, useState } from "react";
 import { MdCheck } from "react-icons/md";
+import useSWR from "swr";
+import WorkspaceEndpointItem from "./widgets/workspace_endpoint_item";
+import Link from "next/link";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -46,7 +42,6 @@ export default function Page({ params }: { params: { slug: string } }) {
     Fetch.getData
   );
   const [filteredItems, setFilteredItems] = useState<EndpointItem[]>([]);
-
 
   useEffect(() => {
     if (data) {
@@ -105,55 +100,55 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <Box>
-        <Box display={"flex"} flex={1} flexDir={"column"} mb="8">
-          <InputGroup width={{ lg: "55%", base: "100%" }} mb={4}>
-            <InputRightElement>
-              {search ? (
-                <CloseIcon
-                  _hover={{
-                    cursor: "pointer",
-                  }}
-                  onClick={() => setSearch("")}
-                />
-              ) : (
-                <SearchIcon color="black" />
-              )}
-            </InputRightElement>
-            <Input
-              bg={"white"}
-              value={search}
-              placeholder="Search endpoint name"
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </InputGroup>
- 
-          <Text>Filter by</Text>
-          <Box display={"flex"} flex={1} gap={2}>
-            {Object.values(HttpMethod).map((httpMethod) => (
-              <Button
-                key={httpMethod}
-                onClick={() => {
-                  const index = filterMethodType.indexOf(httpMethod);
-                  const filtered = [...filterMethodType];
-                  filterMethodType.includes(httpMethod)
-                    ? filtered.splice(index, 1)
-                    : filtered.push(httpMethod);
-                  setFilterMethodType(filtered);
-                  console.log(filterMethodType);
+      <Box display={"flex"} flex={1} flexDir={"column"} mb="8">
+        <InputGroup width={{ lg: "55%", base: "100%" }} mb={4}>
+          <InputRightElement>
+            {search ? (
+              <CloseIcon
+                _hover={{
+                  cursor: "pointer",
                 }}
-                rightIcon={
-                  filterMethodType.includes(httpMethod) ? <MdCheck /> : <Box />
-                }
-                colorScheme="blue"
-                bg={filterMethodType.includes(httpMethod) ? "blue.50" : "white"}
-                variant="outline"
-                rounded={"xl"}
-              >
-                {httpMethod}
-              </Button>
-            ))}
-          </Box>
+                onClick={() => setSearch("")}
+              />
+            ) : (
+              <SearchIcon color="black" />
+            )}
+          </InputRightElement>
+          <Input
+            bg={"white"}
+            value={search}
+            placeholder="Search endpoint name"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </InputGroup>
+
+        <Text>Filter by</Text>
+        <Box display={"flex"} flex={1} gap={2}>
+          {Object.values(HttpMethod).map((httpMethod) => (
+            <Button
+              key={httpMethod}
+              onClick={() => {
+                const index = filterMethodType.indexOf(httpMethod);
+                const filtered = [...filterMethodType];
+                filterMethodType.includes(httpMethod)
+                  ? filtered.splice(index, 1)
+                  : filtered.push(httpMethod);
+                setFilterMethodType(filtered);
+                console.log(filterMethodType);
+              }}
+              rightIcon={
+                filterMethodType.includes(httpMethod) ? <MdCheck /> : <Box />
+              }
+              colorScheme="blue"
+              bg={filterMethodType.includes(httpMethod) ? "blue.50" : "white"}
+              variant="outline"
+              rounded={"xl"}
+            >
+              {httpMethod}
+            </Button>
+          ))}
         </Box>
+      </Box>
 
       <List spacing={3} mb={12}>
         {filteredItems.length == 0 ? (
@@ -171,27 +166,24 @@ export default function Page({ params }: { params: { slug: string } }) {
           ))
         )}
       </List>
-      <Link
-        href={`/dashboard/workspaces/${params.slug}/new`}
-        position={"absolute"}
-        bottom={4}
-        right={4}
-      >
-        <Button
-          color={"white"}
-          _hover={{
-            textColor: "bgray.700",
-            background: "gray.200",
-          }}
-          background={"black"}
-          position={"fixed"}
-          zIndex={2}
-          bottom={4}
-          right={4}
-        >
-          <Text>Create New Endpoint</Text>
-        </Button>
-      </Link>
+      <Box position={"absolute"} bottom={4} right={4}>
+        <Link href={`/dashboard/workspaces/${params.slug}/new`}>
+          <Button
+            color={"white"}
+            _hover={{
+              textColor: "bgray.700",
+              background: "gray.200",
+            }}
+            background={"black"}
+            position={"fixed"}
+            zIndex={2}
+            bottom={4}
+            right={4}
+          >
+            <Text>Create New Endpoint</Text>
+          </Button>
+        </Link>
+      </Box>
       <Dialog isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
         <AlertDialogContent>
           <AlertDialogHeader>

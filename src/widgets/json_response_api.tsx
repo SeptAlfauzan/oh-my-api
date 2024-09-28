@@ -40,6 +40,7 @@ export default function JsonResponseAPI({
             options={{
               readOnly: true,
             }}
+            onMount={(e) => e.getAction("editor.action.formatDocument")?.run()}
             value={editorData || JSON.stringify(data?.jsonResponse)}
             defaultLanguage="json"
           />

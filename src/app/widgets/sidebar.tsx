@@ -28,7 +28,7 @@ export default function Sidebar({ items }: Props) {
 
   return (
     <Box
-      position={{ base: "absolute", md: "relative" }}
+      display={{ base: "none", md: "block" }}
       px={4}
       zIndex={10}
       boxShadow={"xs"}

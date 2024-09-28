@@ -16,6 +16,7 @@ import { editor } from "monaco-editor";
 import PostPutRequsetBodyFields from "../widgets/post_put_request_body_fields";
 import FileUpload from "@/widgets/file_upload";
 import { Editor } from "@monaco-editor/react";
+import { useRef } from "react";
 
 type Props = {
   handleUploadJson: () => Promise<void>;
@@ -47,6 +48,7 @@ export default function NewEndpointForm({
   loading,
   enabledButton,
 }: Props) {
+  const editorRef = useRef();
   return (
     <Box>
       <form
@@ -133,6 +135,9 @@ export default function NewEndpointForm({
           <Text color={"gray"}>Edit your json</Text>
           <Box height={{ base: "40vh", md: "60vh" }}>
             <Editor
+              onMount={(e) =>
+                e.getAction("editor.action.formatDocument")?.run()
+              }
               value={editorValue}
               onChange={handleOnChangeEditor}
               height="100%"

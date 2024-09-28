@@ -4,12 +4,12 @@ import {
   Box,
   Button,
   IconButton,
-  Link,
   ListItem,
   Text,
   useToast,
 } from "@chakra-ui/react";
 import { HttpMethod } from "@prisma/client";
+import Link from "next/link";
 import { MdCopyAll, MdDelete, MdShare } from "react-icons/md";
 
 type Props = {
@@ -103,7 +103,6 @@ export default function WorkspaceEndpointItem({
     }
   };
 
-
   return (
     <ListItem
       display={"flex"}
@@ -113,26 +112,28 @@ export default function WorkspaceEndpointItem({
       padding={2}
       borderRadius={8}
     >
-      <Link href={url} width={"100%"}>
-        <Box display={"flex"} width={"100%"} alignItems={"center"} gap={4}>
-          <Text width={20} color={colorType} fontWeight={"bold"}>
-            {typeRequest}
-          </Text>
-          <Box>
-            <Text noOfLines={1} textOverflow={"ellipsis"}>
-              {item.name}
+      <Box width={"100%"}>
+        <Link href={url}>
+          <Box display={"flex"} width={"100%"} alignItems={"center"} gap={4}>
+            <Text width={20} color={colorType} fontWeight={"bold"}>
+              {typeRequest}
             </Text>
-            <Text
-              fontSize={12}
-              color={"gray.400"}
-              noOfLines={1}
-              textOverflow={"ellipsis"}
-            >
-              {item.desc}
-            </Text>
+            <Box>
+              <Text noOfLines={1} textOverflow={"ellipsis"}>
+                {item.name}
+              </Text>
+              <Text
+                fontSize={12}
+                color={"gray.400"}
+                noOfLines={1}
+                textOverflow={"ellipsis"}
+              >
+                {item.desc}
+              </Text>
+            </Box>
           </Box>
-        </Box>
-      </Link>
+        </Link>
+      </Box>
       <IconButton
         onClick={() => {
           openDeleteDialog(item);
@@ -152,7 +153,9 @@ export default function WorkspaceEndpointItem({
         marginLeft={"auto"}
         onClick={handleCopyUrl}
       >
-        <Text display={{ base: "none", md: "block" }} fontSize="8">Copy API URL</Text>
+        <Text display={{ base: "none", md: "block" }} fontSize="8">
+          Copy API URL
+        </Text>
       </Button>
     </ListItem>
   );
