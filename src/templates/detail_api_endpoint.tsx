@@ -1,9 +1,5 @@
 import { HEADER_AUTHORIZATION_FIELD } from "@/constanta";
-import {
-  ApiEndpointOutput,
-  RequestBodyFieldRule,
-  RequestBodyRuleOutput,
-} from "@/interfaces";
+import { ApiEndpointOutput, RequestBodyRuleOutput } from "@/interfaces";
 import EndpointUrl from "@/widgets/endpoint_url";
 import JsonResponseAPI from "@/widgets/json_response_api";
 import {

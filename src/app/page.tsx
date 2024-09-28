@@ -45,8 +45,11 @@ function HomePage() {
         position="sticky"
         width="100%"
         display="flex"
+        alignItems={"center"}
         flexDir="row"
+        gap={2}
       >
+        <Image src="/icons/ohmyapi_ic.png" width={12} height={12} alt="logo" />
         <Text fontWeight="bold">Oh My REST API</Text>
         <Button ml="auto" onClick={() => router.push("/auth")}>
           <Text>Login</Text>
@@ -89,7 +92,7 @@ function HomePage() {
         From developer, to developer
       </Heading>
       <Box width={{ base: "100%", md: 620 }} alignSelf={"center"} mb={8}>
-        <Heading fontSize={52} textAlign="center">
+        <Heading fontSize={{ md: 52, base: 40 }} textAlign="center">
           Turn API development into better developer outcomes
         </Heading>
         <Text mt={8}>
@@ -192,7 +195,7 @@ function HighlightedFeatures({ items }: Props) {
             <CardHeader>
               <Flex alignItems="center" gap={4}>
                 {item.icon}
-                <Heading fontSize={24}>{item.title}</Heading>
+                <Heading fontSize={{ md: 24, base: 16 }}>{item.title}</Heading>
               </Flex>
             </CardHeader>
             <CardBody>

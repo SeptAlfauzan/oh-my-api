@@ -17,6 +17,9 @@ const comfortaa = Comfortaa({
 
 export const metadata: Metadata = {
   title: "Oh-My-API 🔥",
+  icons: {
+    icon: "/icons/icon.png",
+  },
   description:
     "Generate your dummy REST API to speed up your app development ⚡",
 };
