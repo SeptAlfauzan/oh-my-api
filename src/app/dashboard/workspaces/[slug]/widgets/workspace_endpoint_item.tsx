@@ -80,7 +80,7 @@ export default function WorkspaceEndpointItem({
       try {
         await copyToClipboard({
           message: "-",
-          value: `${window.location.origin}/api/share/${item.id}`,
+          value: `${window.location.origin}/share/${item.id}`,
         });
         toast({
           title: "Share url from en to end endpoint is copied!.",

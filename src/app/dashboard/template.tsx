@@ -24,7 +24,13 @@ export default function DashboardTemplate({ children }: Props) {
   const [signoutError, setSignoutError] = useState("");
 
   return (
-    <Box display={"flex"} background={"gray.50"} minHeight={"100vh"} gap={10}>
+    <Box
+      display={"flex"}
+      flexDir={{ base: "column", md: "row" }}
+      background={"gray.50"}
+      minHeight={"100vh"}
+      gap={10}
+    >
       <DashboardSidebar
         onSignoutError={(message) => {
           setSignoutError(message);

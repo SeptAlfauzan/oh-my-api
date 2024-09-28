@@ -1,14 +1,11 @@
 "use client";
 import { useHandlerExecutionAPI } from "@/app/hooks/use_handler_execution_api";
-import { HEADER_AUTHORIZATION_FIELD } from "@/constanta";
 import Fetch from "@/helper/fetch";
 import { ApiEndpointOutput } from "@/interfaces";
 import DetailEndpointComponent from "@/templates/detail_api_endpoint";
 import { copyToClipboard } from "@/utils/copy_clipboard";
-import { appendRecordToFormData } from "@/utils/form_data";
-import { Box, Button, Text, useToast } from "@chakra-ui/react";
-import { FieldType, HttpMethod } from "@prisma/client";
-import { useState } from "react";
+import { Box, Button, IconButton, Text, useToast } from "@chakra-ui/react";
+import { MdShare } from "react-icons/md";
 import useSWR from "swr";
 
 export default function Page({
@@ -103,15 +100,6 @@ export default function Page({
 
   return (
     <Box>
-      <Button
-        background={"orange"}
-        position={"fixed"}
-        bottom={4}
-        right={4}
-        onClick={handleCopyClipBoardSharePage}
-      >
-        Share this
-      </Button>
       <DetailEndpointComponent
         id={params.id}
         status={status}
@@ -120,6 +108,28 @@ export default function Page({
         handleCopyClipBoard={handleCopyClipBoard}
         handleExecuteEndpoint={handleExecuteEndpoint}
       />
+      <IconButton
+        shadow={"xl"}
+        background={"orange"}
+        position={"fixed"}
+        top={4}
+        right={4}
+        pl={3}
+        display={{ base: "block", md: "none" }}
+        onClick={handleCopyClipBoardSharePage}
+        aria-label="share button"
+        icon={<MdShare />}
+      />
+      <Button
+        display={{ md: "block", base: "none" }}
+        background={"orange"}
+        position={"fixed"}
+        bottom={4}
+        right={4}
+        onClick={handleCopyClipBoardSharePage}
+      >
+        Share this
+      </Button>
     </Box>
   );
 }

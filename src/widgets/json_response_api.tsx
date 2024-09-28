@@ -20,6 +20,7 @@ export default function JsonResponseAPI({
       position={"relative"}
       flexDir={{ base: "column", md: "row" }}
     >
+      <Text>API Response Result</Text>
       <Box>
         <Text>Status Code</Text>
         <Text fontWeight={"bold"} color={status == 200 ? "green" : "red"}>
@@ -28,7 +29,7 @@ export default function JsonResponseAPI({
       </Box>
 
       <Box height={300} flex={1}>
-        <Text>Response</Text>
+        <Text>Json Response</Text>
         <Box
           rounded={"lg"}
           width={"100%"}

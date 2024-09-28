@@ -60,117 +60,114 @@ const DetailEndpointComponent: React.FC<Props> = ({
   const initialValues = transformRequestBodyRules(data?.requestBodyRules);
 
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={async (values, actions) => {
-        console.log("formik", JSON.stringify(values, null, 2));
-        await handleExecuteEndpoint(values);
-        actions.setSubmitting(false);
-      }}
-    >
-      {({ errors, touched, isSubmitting, values }) => (
-        <Form>
-          <Box display={"flex"} flexDir={"column"} gap={4}>
-            <Box
-              p={data?.httpMethod == HttpMethod.GET ? 0 : 4}
-              background={"gray.50"}
-              rounded={"md"}
-            >
-              {data?.useAuthorization ? (
-                <Field name={HEADER_AUTHORIZATION_FIELD}>
-                  {({ field, form }: FieldProps<any>) => (
-                    <FormControl isRequired={true}>
-                      <FormLabel>Header Authorization</FormLabel>
-                      <Input
-                        placeholder={"header authorization token"}
-                        type={"text"}
-                        {...field}
-                      />
-                    </FormControl>
-                  )}
-                </Field>
-              ) : null}
-
-              {data?.requestBodyRules.length != undefined &&
-              data?.requestBodyRules.length > 0 ? (
-                <Text my={4}>Request body</Text>
-              ) : null}
-              <SimpleGrid columns={{ md: 4, sm: 2, base: 1 }} spacing={4}>
-                {data?.requestBodyRules.map((rule, index) => (
-                  <Field key={index} name={rule.field_name}>
+    <Box mb={{ base: 10, md: 0 }}>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={async (values, actions) => {
+          console.log("formik", JSON.stringify(values, null, 2));
+          await handleExecuteEndpoint(values);
+          actions.setSubmitting(false);
+        }}
+      >
+        {({ errors, touched, isSubmitting, values }) => (
+          <Form>
+            <Box display={"flex"} flexDir={"column"} gap={4}>
+              <Box background={"gray.50"} rounded={"md"} p={2}>
+                {data?.useAuthorization ? (
+                  <Field name={HEADER_AUTHORIZATION_FIELD}>
                     {({ field, form }: FieldProps<any>) => (
-                      <FormControl
-                        isInvalid={
-                          !!(
-                            form.errors[rule.field_name] &&
-                            form.touched[rule.field_name]
-                          )
-                        }
-                      >
-                        <FormLabel
-                          htmlFor={rule.field_name}
-                          display="flex"
-                          alignItems={"center"}
-                          gap={2}
-                        >
-                          {rule.field_name}{" "}
-                          <Text color="gray.400" fontSize={12}>
-                            [input type: {rule.field_type}]
-                          </Text>
-                        </FormLabel>
-                        {rule.field_type === FieldType.BOOLEAN ? (
-                          <Checkbox {...field} id={rule.field_name}>
-                            {rule.field_name}
-                          </Checkbox>
-                        ) : (
-                          <Input
-                            id={rule.field_name}
-                            placeholder={rule.field_name}
-                            type={inputTypeFromEndpointFieldType(
-                              rule.field_type
-                            )}
-                            {...field}
-                          />
-                        )}
-                        <FormErrorMessage>
-                          {form.errors[rule.field_name] as string}
-                        </FormErrorMessage>
+                      <FormControl isRequired={true}>
+                        <FormLabel>Header Authorization</FormLabel>
+                        <Input
+                          placeholder={"header authorization token"}
+                          type={"text"}
+                          {...field}
+                        />
                       </FormControl>
                     )}
                   </Field>
-                ))}
-              </SimpleGrid>
-            </Box>
+                ) : null}
 
-            <EndpointUrl
-              data={data}
-              handleCopyClipBoard={handleCopyClipBoard}
-              colorRequestMethod={getRequestTypeColor(data)}
-              id={id}
-            />
-            <JsonResponseAPI
-              status={status}
-              data={data}
-              editorData={editorData}
-            />
-            <Button
-              width={{ md: 320, base: "auto" }}
-              mt={10}
-              type="submit"
-              disabled={isSubmitting}
-              background={"black"}
-              color={"white"}
-              _hover={{
-                color: "black",
-                background: "gray.100",
-              }}
-            >
-              {isSubmitting ? "Loading..." : "Execute endpoint"}
-            </Button>
-          </Box>
-        </Form>
-      )}
-    </Formik>
+                {data?.requestBodyRules.length != undefined &&
+                data?.requestBodyRules.length > 0 ? (
+                  <Text my={4}>Request body</Text>
+                ) : null}
+                <SimpleGrid columns={{ md: 4, sm: 2, base: 1 }} spacing={4}>
+                  {data?.requestBodyRules.map((rule, index) => (
+                    <Field key={index} name={rule.field_name}>
+                      {({ field, form }: FieldProps<any>) => (
+                        <FormControl
+                          isInvalid={
+                            !!(
+                              form.errors[rule.field_name] &&
+                              form.touched[rule.field_name]
+                            )
+                          }
+                        >
+                          <FormLabel
+                            htmlFor={rule.field_name}
+                            display="flex"
+                            alignItems={"center"}
+                            gap={2}
+                          >
+                            {rule.field_name}{" "}
+                            <Text color="gray.400" fontSize={12}>
+                              [input type: {rule.field_type}]
+                            </Text>
+                          </FormLabel>
+                          {rule.field_type === FieldType.BOOLEAN ? (
+                            <Checkbox {...field} id={rule.field_name}>
+                              {rule.field_name}
+                            </Checkbox>
+                          ) : (
+                            <Input
+                              id={rule.field_name}
+                              placeholder={rule.field_name}
+                              type={inputTypeFromEndpointFieldType(
+                                rule.field_type
+                              )}
+                              {...field}
+                            />
+                          )}
+                          <FormErrorMessage>
+                            {form.errors[rule.field_name] as string}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                  ))}
+                </SimpleGrid>
+              </Box>
+              <EndpointUrl
+                data={data}
+                handleCopyClipBoard={handleCopyClipBoard}
+                colorRequestMethod={getRequestTypeColor(data)}
+                id={id}
+              />
+              <JsonResponseAPI
+                status={status}
+                data={data}
+                editorData={editorData}
+              />
+              <Button
+                width={{ md: 320, base: "auto" }}
+                mt={10}
+                type="submit"
+                disabled={isSubmitting}
+                background={"black"}
+                color={"white"}
+                _hover={{
+                  color: "black",
+                  background: "gray.100",
+                }}
+              >
+                {isSubmitting ? "Loading..." : "Execute endpoint"}
+              </Button>
+            </Box>
+          </Form>
+        )}
+      </Formik>
+    </Box>
   );
 };
 
